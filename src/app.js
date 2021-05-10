@@ -22,17 +22,16 @@ const createProfileIndex = async () => {
       CREATE INDEX profile_lower_firstName 
       ON default:user_profile._default.profile(lower(\`firstName\`));
     `
-    await cluster.query(query)
-    console.log(`Index Creation: ${result.meta.status}\n`)
+    const result = await cluster.query(query)
+    console.log(`Index Creation: ${result.meta.status}`)
   } catch (err) {
-    if (err instanceof errors.IndexExistsError) {
-      // swallow the error if the user wants us to
+    if (err instanceof couchbase.IndexExistsError) {
+      console.info('Index Creation: Index Already Exists');
     } else {
-      console.error(error);
+      console.error(err);
     }
   }
 }
-createProfileIndex()
 
 app.post("/profiles", async (req, res) => {
   if (!req.body.email) {
@@ -43,7 +42,6 @@ app.post("/profiles", async (req, res) => {
 
   const id = v4()
   const profile = { pid: id, ...req.body, pass: bcrypt.hashSync(req.body.pass, 10) }
-
   await profileCollection.insert(id, profile)
     .then((result) => res.send({ ...profile, ...result }))
     .catch((e) => res.status(500).send({
@@ -80,9 +78,7 @@ app.put("/profiles/:pid", async (req, res) => {
 app.delete("/profiles/:pid", async (req, res) => {
   try {
     await profileCollection.remove(req.params.pid)
-      .then(() => {
-        return res.status(500).send(e)
-      })
+      .then((result) => res.send(result.value))
       .catch((e) => res.status(500).send(e))
   } catch (e) {
     console.error(e)
@@ -122,6 +118,10 @@ app.get("/profiles/", async (req, res) => {
     console.error(e)
   }
 })
-/* We will build our endpoints here */
 
 export default app
+
+module.exports = {
+  app,
+  createProfileIndex
+}
