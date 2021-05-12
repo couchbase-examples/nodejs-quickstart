@@ -1,8 +1,9 @@
 import express from 'express'
-import couchbase from 'couchbase'
 import bcrypt from 'bcryptjs'
 import { v4 } from 'uuid'
 import cors from 'cors'
+
+import { couchbase, cluster, profileCollection } from '../db/connection'
 
 const app = express()
 
@@ -10,17 +11,11 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-const options = { username: 'Administrator', password: 'password' }
-const cluster = new couchbase.Cluster('localhost', options)
-const bucket = cluster.bucket('user_profile')
-const defaultScope = bucket.scope('_default')
-const profileCollection = defaultScope.collection('profile')
-
 const createProfileIndex = async () => {
   try {
     const query = `
       CREATE INDEX profile_lower_firstName 
-      ON default:user_profile._default.profile(lower(\`firstName\`));
+      ON default:${process.env.CB_BUCKET}._default.profile(lower(\`firstName\`));
     `
     const result = await cluster.query(query)
     console.log(`Index Creation: ${result.meta.status}`)
@@ -34,10 +29,13 @@ const createProfileIndex = async () => {
 }
 
 app.post("/profiles", async (req, res) => {
-  if (!req.body.email) {
-    return res.status(401).send({ "message": "An `email` is required" })
-  } else if (!req.body.pass) {
-    return res.status(401).send({ "message": "A `password` is required" })
+  if (!req.body.email || !req.body.pass) {
+    return res.status(400).send({ "message": `${!req.body.email ? 'email ' : ''}${
+        (!req.body.email && !req.body.pass) 
+          ? 'and pass are required' 
+          : (req.body.email && !req.body.pass) 
+            ? 'pass is required' 
+            : 'is required'}`})
   }
 
   const id = v4()
@@ -119,9 +117,8 @@ app.get("/profiles/", async (req, res) => {
   }
 })
 
-export default app
+app.get("/test/", async (req, res) => {
+  res.send({"good": req.body.test})
+})
 
-module.exports = {
-  app,
-  createProfileIndex
-}
+module.exports = { app, createProfileIndex }
