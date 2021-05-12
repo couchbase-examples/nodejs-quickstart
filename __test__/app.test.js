@@ -13,8 +13,8 @@ describe("POST /profiles", () => {
   describe("given a user & pass", () => {
     var pid
     const profile = {
-      firstName: "Erock", lastName: "Bishnerd",
-      email: "erock@bishnerd.com", pass: "p455w3rd"
+      firstName: "Joe", lastName: "dev",
+      email: "joe@dev.com", pass: "p455w3rd"
     }
     beforeEach(async () => { })
     afterEach(async () => {
@@ -33,7 +33,7 @@ describe("POST /profiles", () => {
 
   })
   describe("given the email is missing", () => {
-    const profile = { firstName: "Erock", lastName: "Bishnerd", pass: "p455w3rd" }
+    const profile = { firstName: "Joe", lastName: "dev", pass: "p455w3rd" }
     test("should respond with status code 400 and message: 'email is required'", async () => {
       const response = await request(app).post("/profiles").send(profile)
       expect(response.statusCode).toBe(400)
@@ -41,14 +41,14 @@ describe("POST /profiles", () => {
     })
   })
   describe("given the pass is missing", () => {
-    const profile = { firstName: "Erock", lastName: "Bishnerd", email: "erock@bishnerd.com" }
+    const profile = { firstName: "Joe", lastName: "dev", email: "joe@dev.com" }
     test("should respond with status code 400 and message: 'pass is required'", async () => {
       const response = await request(app).post("/profiles").send(profile)
       expect(response.body.message).toBe('pass is required')
     })
   })
   describe("given user and pass are missing", () => {
-    const profile = { firstName: "Erock", lastName: "Bishnerd" }
+    const profile = { firstName: "Joe", lastName: "dev" }
     test("should respond with status code 400 and message: 'email and pass are required'", async () => {
       const response = await request(app).post("/profiles").send(profile)
       expect(response.statusCode).toBe(400)
@@ -61,8 +61,8 @@ describe("GET /profiles/{id}", () => {
   describe("given we pass a pid as request param", () => {
     const id = v4()
     const profile = {
-      pid: id, firstName: "Eric", lastName: "Bishard",
-      email: "eric.bishard@couchbase.com", pass: bcrypt.hashSync('mypassword', 10)
+      pid: id, firstName: "Joseph", lastName: "Developer",
+      email: "joseph.developer@couchbase.com", pass: bcrypt.hashSync('mypassword', 10)
     }
 
     beforeEach(async () => {
@@ -91,8 +91,8 @@ describe("DELETE /profiles/{id}", () => {
 
     beforeEach(async () => {
       const profile = {
-        pid: id, firstName: "Eric", lastName: "Bishard",
-        email: "eric.bishard@couchbase.com", pass: bcrypt.hashSync('mypassword', 10)
+        pid: id, firstName: "Joseph", lastName: "Developer",
+        email: "joseph.developer@couchbase.com", pass: bcrypt.hashSync('mypassword', 10)
       }
       await profileCollection.insert(id, profile)
         .then(() => {/*console.log('test item inserted', profile)*/ })
@@ -111,12 +111,12 @@ describe("PUT /profiles", () => {
   describe("given the profile object is updated", () => {
     const id = v4()
     const initialProfile = {
-      pid: id, firstName: "Eric", lastName: "Bishard",
-      email: "eric.bishard@couchbase.com", pass: bcrypt.hashSync('mypassword', 10)
+      pid: id, firstName: "Joseph", lastName: "Developer",
+      email: "joseph.developer@couchbase.com", pass: bcrypt.hashSync('mypassword', 10)
     }
     const updatedProfile = {
-      firstName: "Erock", lastName: "Bishnerd",
-      email: "erock@bishnerd.com", pass: "p455w3rd"
+      firstName: "Joe", lastName: "dev",
+      email: "joe@dev.com", pass: "p455w3rd"
     }
 
     beforeEach(async () => {
