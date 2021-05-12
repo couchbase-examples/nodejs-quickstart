@@ -1,11 +1,10 @@
 {
   "name": "node-quickstart",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Quickstart: Couchbase and The NodeJS SDK",
+  "main": "src/server.js",
   "scripts": {
     "test": "env-cmd ./config/test.env jest",
-    "test:dev": "npm test --forceExit --detectOpenHandles --watch",
     "start": "env-cmd ./config/dev.env nodemon --exec babel-node src/server",
     "clean": "rm -rf dist",
     "build": "npm run clean && babel ./src --out-dir dist --copy-files"
