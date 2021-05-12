@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: couchbase-example-node-db
+type: Opaque
+data:
+  username: QWRtaW5pc3RyYXRvcg==  # Administrator
+  password: cGFzc3dvcmQ=          # password
+---
+apiVersion: couchbase.com/v2
+kind: CouchbaseBucket
+metadata:
+  name: test_profile  
+spec:
+  memoryQuota: 256Mi
+---
+apiVersion: couchbase.com/v2
+kind: CouchbaseCluster
+metadata:
+  name: couchbase-example-node
+spec:
+  image: couchbase/server:7.0.0-beta
+  security:
+    adminSecret: couchbase-example-node-password
+  networking:
+    exposeAdminConsole: true
+    adminConsoleServices:
+    - data
+    exposedFeatures: 
+    - client 
+  buckets:
+    managed: true
+  servers:
+  - size: 1  
+    name: all_services
+    services:
+    - data
+    - index
+    - query
