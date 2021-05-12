@@ -1,4 +1,4 @@
-# Quickstart: Couchbase and The NodeJS SDK
+# Profile Store in Couchbase with Node JS and Express
 
 This is a companion repository for: "Profile Store in Couchbase with Node JS and Express" at link:https://developer.couchbase.com[developer.couchbase.com], which aims to get you up and running with Couchbase and the NodeJS SDK, connect to a Couchbase cluster, create, read, update, and delete documents, and how to write simple parametrized N1QL queries.
 

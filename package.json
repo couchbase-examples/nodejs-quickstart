@@ -1,7 +1,7 @@
 {
   "name": "node-quickstart",
   "version": "1.0.0",
-  "description": "Quickstart: Couchbase and The NodeJS SDK",
+  "description": "Profile Store in Couchbase with Node JS and Express",
   "main": "src/server.js",
   "scripts": {
     "test": "env-cmd ./config/test.env jest",
