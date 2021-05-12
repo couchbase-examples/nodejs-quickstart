@@ -1,4 +1,10 @@
-== Prerequisites
+# Quickstart: Couchbase and The NodeJS SDK
+
+This is a companion repository for: "Profile Store in Couchbase with Node JS and Express" at link:developer.couchbase.com[developer.couchbase.com], which aims to get you up and running with Couchbase and the NodeJS SDK, connect to a Couchbase cluster, create, read, update, and delete documents, and how to write simple parametrized N1QL queries.
+
+We will be using the latest version of Couchbase (version 7) that enables scopes and collections.
+
+## Prerequisites
 
 To run this prebuilt project, you will need:
 
