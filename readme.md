@@ -8,9 +8,11 @@ We will be using the latest version of Couchbase (version 7) that enables scopes
 
 To run this prebuilt project, you will need:
 
-- Couchbase 7 Installed (*With `user_profile` bucket and `profile` collection)
-- NodeJS & NPM
-- A Code Editor
+- Couchbase 7 installed
+- Couchbase Bucket: `user_profile` *
+- Couchbase Collection: `profile` *
+- NodeJS & NPM (v12+)
+- Code Editor
 - cURL
 
 *After installation of Couchbase 7, and if it is running on localhost (http://127.0.0.1:8091) we can create a bucket named `user_profile` and a collection named `profile` using two curl commands that uses the Couchbase REST API:
@@ -32,12 +34,15 @@ curl http://127.0.0.1:8091/pools/default/buckets/user_profile/collections/_defau
 -d name=profile
 ```
 
-If you would like to enable testing, you can run the same commands replacing `user_profile` with `test_profile`.
+If you would like to enable testing, you can run the same cURL commands replacing `user_profile` with `test_profile`.
 
 Once the database and the bucket(s) are set up you can run the development environment or the test environment.
 
+## Install Dependencies
 
-Once the repo is cloned, run `npm install` and then choose your adventure:
+```sh
+npm install
+```
 
 ## Running The Application
 
