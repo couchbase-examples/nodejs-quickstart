@@ -20,16 +20,17 @@ describe("GET /profiles/{id}", () => {
         .then(() => {/*console.log('test profile document inserted', profile)*/ })
         .catch((e) => console.log(`test profile insert failed: ${e.message}`))
     })
-    afterEach(async() => {
-      await profileCollection.remove(id)
-        .then(() => {/*console.log('test profile document deleted', id)*/ })
-        .catch((e) => console.log(`test profile remove failed: ${e.message}`))
-    })
 
     test("should respond with status code 200 OK and return profile as object", async() => {
       const response = await request(app).get(`/profiles/${id}`).send()
       expect(response.statusCode).toBe(200)
       expect(response.body).toMatchObject(profile)
+    })
+
+    afterEach(async() => {
+      await profileCollection.remove(id)
+        .then(() => {/*console.log('test profile document deleted', id)*/ })
+        .catch((e) => console.log(`test profile remove failed: ${e.message}`))
     })
 
   })

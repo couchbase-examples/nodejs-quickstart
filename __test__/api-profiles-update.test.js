@@ -24,11 +24,6 @@ describe("PUT /profiles", () => {
         .then(() => {/*console.log('test profile document inserted', profile)*/ })
         .catch((e) => console.log(`test profile insert failed: ${e.message}`))
     })
-    afterEach(async() => {
-      await profileCollection.remove(id)
-        .then(() => {/*console.log('test profile document deleted', id)*/ })
-        .catch((e) => console.log(`test profile remove failed: ${e.message}`))
-    })
 
     test("should respond with status code 200 OK and updated values of document returned", async() => {
       const response = await request(app).put(`/profiles/${id}`).send(updatedProfile)
@@ -37,6 +32,12 @@ describe("PUT /profiles", () => {
       expect(response.body.lastName).toBe(updatedProfile.lastName)
       expect(response.body.email).toBe(updatedProfile.email)
       expect(response.body.pass).not.toBe(updatedProfile.pass)
+    })
+
+    afterEach(async() => {
+      await profileCollection.remove(id)
+        .then(() => {/*console.log('test profile document deleted', id)*/ })
+        .catch((e) => console.log(`test profile remove failed: ${e.message}`))
     })
 
   })
