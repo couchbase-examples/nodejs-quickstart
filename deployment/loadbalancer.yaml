@@ -1,0 +1,54 @@
+#
+# Create Load Balancer 
+# Description:  expose single server via ports matching selector -> app:
+#
+# Couchbase Ports documentation:  https://docs.couchbase.com/server/7.0/install/install-ports.html
+#
+# EKS Documentation:  https://aws.amazon.com/premiumsupport/knowledge-center/eks-kubernetes-services-cluster/
+#
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: db-nodejs-quickstart 
+  ports:
+    - name: couchbase-tcp-8091 
+      protocol: TCP
+      port: 8091
+      targetPort: 8091
+    - name: couchbase-tcp-8092
+      protocol: TCP
+      port: 8092
+      targetPort: 8092
+    - name: couchbase-tcp-8093
+      protocol: TCP
+      port: 8093
+      targetPort: 8093
+    - name: couchbase-tcp-8094
+      protocol: TCP
+      port: 8094
+      targetPort: 8094
+    - name: couchbase-tcp-8095
+      protocol: TCP
+      port: 8095
+      targetPort: 8095
+    - name: couchbase-tcp-8096
+      protocol: TCP
+      port: 8096
+      targetPort: 8096
+    - name: couchbase-tcp-9140
+      protocol: TCP
+      port: 9140 
+      targetPort: 9140 
+    - name: couchbase-tcp-11210
+      protocol: TCP
+      port: 11210 
+      targetPort: 11210 
+    - name: couchbase-tcp-11211
+      protocol: TCP
+      port: 11211 
+      targetPort: 11211 

@@ -1,27 +1,19 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: couchbase-example-node-db
-type: Opaque
-data:
-  username: QWRtaW5pc3RyYXRvcg==  # Administrator
-  password: cGFzc3dvcmQ=          # password
----
-apiVersion: couchbase.com/v2
-kind: CouchbaseBucket
-metadata:
-  name: test_profile  
-spec:
-  memoryQuota: 256Mi
----
+#
+# Create Couchbase Database Cluster
+# Description:  create Couchbase Database Cluster (note you must first create secret, bucket config before running this) 
+#
+# Couchbase Operator documentation: https://docs.couchbase.com/operator/current/howto-couchbase-create.html 
+#
 apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 metadata:
-  name: couchbase-example-node
+  name: couchbase-cluster-nodejs-quickstart 
+  labels:
+    app: db-nodejs-quickstart                   #used to match nodeport config
 spec:
   image: couchbase/server:7.0.0-beta
   security:
-    adminSecret: couchbase-example-node-password
+    adminSecret: db-secret                      #points to the kind: Secret with password 
   networking:
     exposeAdminConsole: true
     adminConsoleServices:
@@ -30,6 +22,9 @@ spec:
     - client 
   buckets:
     managed: true
+  selector:
+    matchLabels:
+      cluster: db-cluster-nodejs-quickstart       #used to match bucket
   servers:
   - size: 1  
     name: all_services

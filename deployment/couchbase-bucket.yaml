@@ -1,0 +1,15 @@
+#
+# Create Bucket Configuration 
+# Description:  create bucket configuration for Couchbase Operator 
+#
+# Couchbase Operator documentation: https://docs.couchbase.com/operator/current/howto-couchbase-create.html 
+#
+
+apiVersion: couchbase.com/v2
+kind: CouchbaseBucket
+metadata:
+  name: couchbase-bucket-example-node-db  
+  labels:
+    cluster: db-cluster-nodejs-quickstart      #used to match CouchbaseCluster selector
+spec:
+  memoryQuota: 256Mi
