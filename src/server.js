@@ -1,7 +1,7 @@
-import { app, createProfileIndex } from './app.js'
+import { app, ensureProfileIndex } from './app.js'
 
-const startServer = async () => {
-  await createProfileIndex()
+const startApiServer = async () => {
+  await ensureProfileIndex()
     .then(() => {
       app.listen(process.env.PORT,
         () => console.info(`Running on port ${process.env.PORT}...`)
@@ -9,4 +9,4 @@ const startServer = async () => {
     })
 }
 
-startServer()
+startApiServer()
