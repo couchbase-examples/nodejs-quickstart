@@ -11,6 +11,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: db-service-loadbalancer
+  labels:
+    app: db-nodejs-quickstart 
 spec:
   type: LoadBalancer
   selector:
