@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-const createProfileIndex = async () => {
+const ensureProfileIndex = async() => {
   try {
     const query = `
       CREATE INDEX profile_lower_firstName 
@@ -121,4 +121,4 @@ app.get("/test/", async (req, res) => {
   res.send({"good": req.body.test})
 })
 
-module.exports = { app, createProfileIndex }
+module.exports = { app, ensureProfileIndex }
