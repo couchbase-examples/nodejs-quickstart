@@ -5,7 +5,7 @@ import {
   app                              // REST application
 } from './imports'
 
-afterAll(async () => cluster.close())
+afterAll(async() => cluster.close())
 
 describe("PUT /profiles", () => {
   describe("given the profile object is updated", () => {
@@ -19,18 +19,18 @@ describe("PUT /profiles", () => {
       email: "joe@dev.com", pass: "p455w3rd"
     }
 
-    beforeEach(async () => {
+    beforeEach(async() => {
       await profileCollection.insert(id, initialProfile)
         .then(() => {/*console.log('test profile document inserted', profile)*/ })
         .catch((e) => console.log(`test profile insert failed: ${e.message}`))
     })
-    afterEach(async () => {
+    afterEach(async() => {
       await profileCollection.remove(id)
         .then(() => {/*console.log('test profile document deleted', id)*/ })
         .catch((e) => console.log(`test profile remove failed: ${e.message}`))
     })
 
-    test("should respond with status code 200 OK and updated values of document returned", async () => {
+    test("should respond with status code 200 OK and updated values of document returned", async() => {
       const response = await request(app).put(`/profiles/${id}`).send(updatedProfile)
       expect(response.statusCode).toBe(200)
       expect(response.body.firstName).toBe(updatedProfile.firstName)

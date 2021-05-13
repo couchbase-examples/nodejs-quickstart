@@ -5,13 +5,13 @@ import {
   app                              // REST application
 } from './imports'
 
-afterAll(async () => cluster.close())
+afterAll(async() => cluster.close())
 
 describe("DELETE /profiles/{id}", () => {
   describe("given we pass a pid as request param", () => {
     const id = v4()
 
-    beforeEach(async () => {
+    beforeEach(async() => {
       const profile = {
         pid: id, firstName: "Joseph", lastName: "Developer",
         email: "joseph.developer@couchbase.com", pass: bcrypt.hashSync('mypassword', 10)
@@ -21,7 +21,7 @@ describe("DELETE /profiles/{id}", () => {
         .catch((e) => console.log(`Test Profile Insert Failed: ${e.message}`))
     })
 
-    test("should respond with status code 200 OK", async () => {
+    test("should respond with status code 200 OK", async() => {
       const response = await request(app).delete(`/profiles/${id}`).send()
       expect(response.statusCode).toBe(200)
     })

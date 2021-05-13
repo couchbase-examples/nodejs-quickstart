@@ -5,7 +5,7 @@ import {
   app                              // REST application
 } from './imports'
 
-afterAll(async () => cluster.close())
+afterAll(async() => cluster.close())
 
 describe("GET /profiles", () => {
   describe("given we get profiles with skip 1, limit 2, and searchFirstName for 'jo'", () => {
@@ -30,7 +30,7 @@ describe("GET /profiles", () => {
       email: "johnny.doh@couchbase.com", pass: bcrypt.hashSync('mypassword4', 10)
     }
 
-    beforeEach(async () => {
+    beforeEach(async() => {
       await profileCollection.insert(id1, profile1)
         .then(() => {/*console.log('test profile document inserted', profile)*/ })
         .catch((e) => console.log(`test profile insert failed: ${e.message}`))
@@ -44,7 +44,7 @@ describe("GET /profiles", () => {
         .then(() => {/*console.log('test profile document inserted', profile)*/ })
         .catch((e) => console.log(`test profile insert failed: ${e.message}`))
     })
-    afterEach(async () => {
+    afterEach(async() => {
       await profileCollection.remove(id1)
         .then(() => {/*console.log('test profile document deleted', id)*/ })
         .catch((e) => console.log(`test profile remove failed: ${e.message}`))
@@ -59,7 +59,7 @@ describe("GET /profiles", () => {
         .catch((e) => console.log(`test profile remove failed: ${e.message}`))
     })
 
-    test("should respond with status code 200 OK and return two documents", async () => {
+    test("should respond with status code 200 OK and return two documents", async() => {
       const response = await request(app).get(`/profiles`).send({
         skip: 1, limit: 2, searchFirstName: 'jo'
       })

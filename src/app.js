@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-const ensureProfileIndex = async () => {
+const ensureProfileIndex = async() => {
   try {
     const query = `
       CREATE INDEX profile_lower_firstName 

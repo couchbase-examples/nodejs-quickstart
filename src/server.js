@@ -1,6 +1,6 @@
 import { app, ensureProfileIndex } from './app.js'
 
-const startApiServer = async () => {
+const startApiServer = async() => {
   await ensureProfileIndex()
     .then(() => {
       app.listen(process.env.PORT,

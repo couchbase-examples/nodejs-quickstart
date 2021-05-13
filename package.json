@@ -4,7 +4,7 @@
   "description": "Profile Store in Couchbase with Node JS and Express",
   "main": "src/server.js",
   "scripts": {
-    "test": "env-cmd ./config/test.env jest",
+    "test": "env-cmd ./config/test.env jest --verbose",
     "start": "env-cmd ./config/dev.env nodemon --exec babel-node src/server",
     "clean": "rm -rf dist",
     "build": "npm run clean && babel ./src --out-dir dist --copy-files"

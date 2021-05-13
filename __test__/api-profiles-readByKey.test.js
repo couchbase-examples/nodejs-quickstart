@@ -5,7 +5,7 @@ import {
   app                              // REST application
 } from './imports'
 
-afterAll(async () => cluster.close())
+afterAll(async() => cluster.close())
 
 describe("GET /profiles/{id}", () => {
   describe("given we pass a pid as request param", () => {
@@ -15,18 +15,18 @@ describe("GET /profiles/{id}", () => {
       email: "joseph.developer@couchbase.com", pass: bcrypt.hashSync('mypassword', 10)
     }
 
-    beforeEach(async () => {
+    beforeEach(async() => {
       await profileCollection.insert(id, profile)
         .then(() => {/*console.log('test profile document inserted', profile)*/ })
         .catch((e) => console.log(`test profile insert failed: ${e.message}`))
     })
-    afterEach(async () => {
+    afterEach(async() => {
       await profileCollection.remove(id)
         .then(() => {/*console.log('test profile document deleted', id)*/ })
         .catch((e) => console.log(`test profile remove failed: ${e.message}`))
     })
 
-    test("should respond with status code 200 OK and return profile as object", async () => {
+    test("should respond with status code 200 OK and return profile as object", async() => {
       const response = await request(app).get(`/profiles/${id}`).send()
       expect(response.statusCode).toBe(200)
       expect(response.body).toMatchObject(profile)
