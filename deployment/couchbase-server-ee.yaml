@@ -16,14 +16,14 @@ spec:
     adminSecret: db-secret                      #points to the kind: Secret with password 
   networking:
     exposeAdminConsole: true
-    adminConsoleServices:
-    - data
-    exposedFeatures: 
+    exposedFeatures:
+    - admin 
     - client 
   buckets:
     managed: true
   selector:
     matchLabels:
+      app: db-nodejs-quickstart 
       cluster: db-cluster-nodejs-quickstart       #used to match bucket
   servers:
   - size: 1  
