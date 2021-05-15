@@ -77,7 +77,9 @@ app.delete("/profiles/:pid", async (req, res) => {
   try {
     await profileCollection.remove(req.params.pid)
       .then((result) => res.send(result.value))
-      .catch((e) => res.status(500).send(e))
+      .catch((error) => res.status(500).send({
+        "message": `Delete failed: ${error.message}`
+      }))
   } catch (e) {
     console.error(e)
   }
@@ -87,9 +89,11 @@ app.get("/profiles/:pid", async (req, res) => {
   try {
     await profileCollection.get(req.params.pid)
       .then((result) => res.send(result.value))
-      .catch((e) => res.status(500).send(e))
-  } catch (e) {
-    console.error(e)
+      .catch((error) => res.status(500).send({
+        "message": `Query failed: ${error.message}`
+      }))
+  } catch (error) {
+    console.error(error)
   }
 })
 
@@ -111,7 +115,9 @@ app.get("/profiles/", async (req, res) => {
     `
     await cluster.query(query, options)
       .then((result) => res.send(result.rows))
-      .catch((e) => res.status(500).send(e))
+      .catch((error) => res.status(500).send({
+        "message": `Query failed: ${error.message}`
+      }))
   } catch (e) {
     console.error(e)
   }
