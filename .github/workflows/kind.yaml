@@ -42,7 +42,7 @@ jobs:
           kubectl get pods -n default 
       - name: create test bucket
         run: |
-        curl -v -X POST http://127.0.0.1:8091/pools/default/buckets -u Administrator:password -d name=test_profile -d ramQuotaMB=256
+          curl -v -X POST http://127.0.0.1:8091/pools/default/buckets -u Administrator:password -d name=test_profile -d ramQuotaMB=256
       - name: build and run tests 
         run: |
           npm ci
