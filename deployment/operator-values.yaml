@@ -109,7 +109,6 @@ cluster:
       - admin
     # Specific services to use when exposing ui
     exposedFeatures:
-      - admin 
       - client
     # Defines how the admin console service is exposed.
     # Allowed values are NodePort and LoadBalancer.

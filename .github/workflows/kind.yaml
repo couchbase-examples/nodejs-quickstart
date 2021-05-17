@@ -40,11 +40,17 @@ jobs:
         run: |
           sleep 180 
           kubectl get pods -n default 
-      - name: create test bucket
+          kubectl get svc -n default
+          kubectl get all -n default
+          kubectl get nodes -o wide
+      - name: create test bucket called test_profile
         run: |
           curl -v -X POST http://127.0.0.1:8091/pools/default/buckets -u Administrator:password -d name=test_profile -d ramQuotaMB=256
-      - name: build and run tests 
+      - name: create collection called profile on the test_profile bucket
         run: |
-          npm ci
-          npm run build
-          npm test
+          curl http://127.0.0.1:8091/pools/default/buckets/test_profile/collections/_default -u Administrator:password -X POST -d name=profile
+      # - name: build and run tests 
+      #  run: |
+      #    npm ci
+      #    npm run build
+      #    npm test
