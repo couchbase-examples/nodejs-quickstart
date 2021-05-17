@@ -1,0 +1,30 @@
+# read up on using workflow dispatch 
+# https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch/
+
+name: "Create cluster using KinD"
+on: 
+  workflow_dispatch
+
+jobs:
+  kind:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: engineerd/setup-kind@v0.5.0
+      - name: cluster-nodejs-quickstart-test
+        run: |
+          kubectl cluster-info
+          kubectl get pods -n kube-system
+          kubectl create -f $GITHUB_WORKSPACE/deployment/operator/crd.yaml
+          /usr/bin/chmod +x deployment/operator/bin/cbopcfg
+          deployment/operator/bin/cbopcfg generate admission | kubectl create -f -
+          deployment/operator/bin/cbopcfg generate operator | kubectl create -f -
+          echo "current-context:" $(kubectl config current-context)
+          echo "environment-kubeconfig:" ${KUBECONFIG}

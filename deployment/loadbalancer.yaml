@@ -1,3 +1,4 @@
+# DO NOT RUN
 #
 # Create Load Balancer 
 # Description:  expose single server via ports matching selector -> app:
@@ -10,7 +11,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: db-service-loadbalancer
+  name: db-service-loadbalance
 spec:
   type: LoadBalancer
   selector:
