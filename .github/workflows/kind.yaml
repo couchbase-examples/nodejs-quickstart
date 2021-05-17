@@ -40,8 +40,8 @@ jobs:
         run: |
           sleep 180 
           kubectl get pods -n default 
-      - name: build and run tests
-        - run: |
+      - name: build and run tests 
+        run: |
           npm ci
           npm run build
           npm test
