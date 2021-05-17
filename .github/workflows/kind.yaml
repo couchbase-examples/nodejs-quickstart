@@ -27,4 +27,5 @@ jobs:
           helm install default --values deployment/operator-values.yaml couchbase/couchbase-operator
       - name: validate the pods for couchbase 
         run: |
+          sleep 180 
           kubectl get pods -n default 
