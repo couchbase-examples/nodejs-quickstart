@@ -158,9 +158,9 @@ cluster:
   # Cluster wide settings for nodes and services
   cluster:
     # The amount of memory that should be allocated to the data service
-    dataServiceMemoryQuota: 256Mi
+    dataServiceMemoryQuota: 512Mi
     # The amount of memory that should be allocated to the index service
-    indexServiceMemoryQuota: 256Mi
+    indexServiceMemoryQuota: 512Mi
     # The amount of memory that should be allocated to the search service
     searchServiceMemoryQuota: 256Mi
     # The amount of memory that should be allocated to the eventing service
