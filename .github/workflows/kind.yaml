@@ -23,7 +23,8 @@ jobs:
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl create -f $GITHUB_WORKSPACE/deployment/operator/crd.yaml
-          ./$GITHUB_WORKSPACE/deployment/operator/bin/cbopcfg generate admission | kubectl create -f -
-          ./$GITHUB_WORKSPACE/deployment/operator/bin/cbopcfg generate operator | kubectl create -f -
+          /usr/bin/chmod +x deployment/operator/bin/cbopcfg
+          deployment/operator/bin/cbopcfg generate admission | kubectl create -f -
+          deployment/operator/bin/cbopcfg generate operator | kubectl create -f -
           echo "current-context:" $(kubectl config current-context)
           echo "environment-kubeconfig:" ${KUBECONFIG}
