@@ -107,8 +107,10 @@ cluster:
     # Option to expose admin console
     adminConsoleServices:
       - admin
-      - client
       - data
+      - index
+      - query 
+      - search
     # Specific services to use when exposing ui
     exposedFeatures:
       - client
