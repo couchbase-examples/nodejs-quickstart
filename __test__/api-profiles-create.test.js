@@ -33,6 +33,7 @@ describe('POST /profiles', () => {
       expect(response.body).toMatchObject({
         firstName: profile.firstName, lastName: profile.lastName, email: profile.email
       })
+      console.log("response->" + response);
     })
 
     afterEach(async() => {
