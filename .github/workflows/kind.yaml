@@ -43,6 +43,7 @@ jobs:
           kubectl get svc -n default
           kubectl get all -n default
           kubectl get nodes -o wide
+          kubectl port-forward --namespace default default-couchbase-cluster-0000 8091:8091 &
       - name: create test bucket called test_profile
         run: |
           curl -v -X POST http://127.0.0.1:8091/pools/default/buckets -u Administrator:password -d name=test_profile -d ramQuotaMB=256
