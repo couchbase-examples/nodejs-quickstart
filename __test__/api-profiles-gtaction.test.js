@@ -2,8 +2,6 @@ import {
   request, describe, test, expect, //supertes
 } from './imports'
 
-afterAll(async() => cluster.close())
-
 describe("GT Action Test", () => {
   describe("xxx", () => {
 
