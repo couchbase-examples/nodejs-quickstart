@@ -18,8 +18,11 @@ describe('POST /profiles', () => {
     const expected = { statusCode: 200, message: 'email and pass are required' }
     let pid
 
+    console.log(`start of the test - this should be removed and is for debugging only `)
+
     test('should respond with statusCode 200 and return document persisted', async() => {
       const response = await request(app).post('/profiles').send(profile)
+      console.log(`log response from request ${response}`)
       pid = response.body.pid
       const hashedPass = response.body.pass
 
@@ -33,7 +36,6 @@ describe('POST /profiles', () => {
       expect(response.body).toMatchObject({
         firstName: profile.firstName, lastName: profile.lastName, email: profile.email
       })
-      console.log("response->" + response);
     })
 
     afterEach(async() => {
