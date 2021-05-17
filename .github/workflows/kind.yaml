@@ -24,7 +24,7 @@ jobs:
         run: |
           helm repo add couchbase https://couchbase-partners.github.io/helm-charts/
           helm repo update
-          helm install default --values deployment/operator-value.yaml couchbase/couchbase-operator
+          helm install default --values deployment/operator-values.yaml couchbase/couchbase-operator
       - name: validate the pods for couchbase 
         run: |
           kubectl get pods -n default 
