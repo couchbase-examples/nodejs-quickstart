@@ -107,14 +107,10 @@ cluster:
     # Option to expose admin console
     adminConsoleServices:
       - admin
-      - data
-      - index
-      - query 
-      - search
     # Specific services to use when exposing ui
     exposedFeatures:
+      - admin 
       - client
-      - xdcr
     # Defines how the admin console service is exposed.
     # Allowed values are NodePort and LoadBalancer.
     # If this field is LoadBalancer then you must also define a spec.dns.domain.
