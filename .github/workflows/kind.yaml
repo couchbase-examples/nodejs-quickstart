@@ -50,8 +50,8 @@ jobs:
       - name: create collection called profile on the test_profile bucket
         run: |
           curl http://127.0.0.1:8091/pools/default/buckets/test_profile/collections/_default -u Administrator:password -X POST -d name=profile
-      # - name: build and run tests 
-      #  run: |
-      #    npm ci
-      #    npm run build
-      #    npm test
+       - name: build and run tests 
+        run: |
+          npm ci
+          npm run build
+          npm test
