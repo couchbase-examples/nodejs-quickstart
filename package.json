@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "init-test-db": "env-cmd ./config/test.env npx babel-node ./src/initializeCbServer.js",
-    "test": "env-cmd ./config/test.env jest --verbose",
+    "test": "env-cmd ./config/test.env jest --verbose --silent=false",
     "init-db": "env-cmd ./config/dev.env npx babel-node ./src/initializeCbServer.js",
     "start": "env-cmd ./config/dev.env nodemon --exec babel-node src/server",
     "clean": "rm -rf dist",
