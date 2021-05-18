@@ -4,11 +4,13 @@ import {
   cluster, profileCollection,      // couchbase
   app                              // REST application
 } from './imports'
+import { ensureProfileIndex } from '../src/app'
 
+beforeAll(async() => await ensureProfileIndex())
 afterAll(async() => cluster.close())
 
 describe("GET /profiles", () => {
-  describe("given we get profiles with skip 1, limit 2, and searchFirstName for 'jo'", () => {
+  describe("given we get profiles with skip 1, limit 2, and searchFirstName starts with 'jo'", () => {
     const profile1 = {
       pid: v4(), firstName: "Joe", lastName: "Schmoe",
       email: "joe.schmoe@couchbase.com", pass: bcrypt.hashSync('mypassword1', 10)
@@ -43,8 +45,9 @@ describe("GET /profiles", () => {
 
     test("should respond with status code 200 OK and return two documents", async() => {
       const response = await request(app).get(`/profiles`).send({
-        skip: 1, limit: 2, searchFirstName: 'jo'
+        skip: 0, limit: 2, searchFirstName: 'jo'
       })
+      console.log(response.body)
       expect(response.statusCode).toBe(200)
       expect(response.body.length).toBe(2)
     })

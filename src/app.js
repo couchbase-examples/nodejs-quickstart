@@ -97,19 +97,19 @@ app.get("/profiles/:pid", async (req, res) => {
   }
 })
 
-app.get("/profiles/", async (req, res) => {
+app.get("/profiles", async (req, res) => {
   try {
     const { skip, limit, searchFirstName } = req.body
     const options = {
       parameters: {
-        LIMIT: Number(limit || 5),
         SKIP: Number(skip || 0),
+        LIMIT: Number(limit || 5),
         FNAME: `%${searchFirstName.toLowerCase()}%`
       }
     }
     const query = `
       SELECT p.*
-      FROM user_profile._default.profile p
+      FROM ${process.env.CB_BUCKET}._default.profile p
       WHERE lower(p.firstName) LIKE $FNAME
       LIMIT $LIMIT OFFSET $SKIP;
     `
@@ -121,10 +121,6 @@ app.get("/profiles/", async (req, res) => {
   } catch (e) {
     console.error(e)
   }
-})
-
-app.get("/test/", async (req, res) => {
-  res.send({"good": req.body.test})
 })
 
 module.exports = { app, ensureProfileIndex }

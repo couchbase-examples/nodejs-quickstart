@@ -1,0 +1,42 @@
+import { restCreateBucket, restCreateCollection, delay } from './initializeCbServer'
+import { app, ensureProfileIndex } from './app.js'
+
+const initializeBucketAndCollection = async () => {
+  await restCreateBucket()
+  await restCreateCollection()
+  console.log(' Bucket and Collection Script done...')
+}
+
+const setupIndex = async () => {
+  await ensureProfileIndex()
+  console.log(' Index script done...')
+}
+
+const startListen = async () => {
+  return new Promise((resolve, reject) => {
+    app.listen(process.env.APP_PORT,
+      () => {
+        console.info(`Running on port ${process.env.APP_PORT}...`)
+        resolve()
+      }
+    )
+  })
+}
+
+const startApp = async () => {
+  await initializeBucketAndCollection()
+  await delay(15000)
+  await setupIndex()
+  await delay(5000)
+
+  // this runs asynchronously and returns immediately, it doesn't
+  //  block until the app shuts down.
+  app.listen(process.env.APP_PORT,
+    () => console.info(`Running on port ${process.env.APP_PORT}...`)
+  )
+}
+
+startApp()
+  .then(() => console.info('app started'))
+  .catch(error => console.log(`app start failed: ${error.message}`))
+

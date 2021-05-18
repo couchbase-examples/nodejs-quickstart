@@ -1,4 +1,4 @@
-import couchbase from 'couchbase'
+import * as couchbase from 'couchbase'
 
 const options = { username: process.env.CB_USER, password: process.env.CB_PASS }
 const cluster = new couchbase.Cluster(process.env.CB_URL, options)

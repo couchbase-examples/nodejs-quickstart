@@ -4,7 +4,9 @@
   "description": "Profile Store in Couchbase with Node JS and Express",
   "main": "src/server.js",
   "scripts": {
+    "init-test-db": "env-cmd ./config/test.env npx babel-node ./src/initializeCbServer.js",
     "test": "env-cmd ./config/test.env jest --verbose",
+    "init-db": "env-cmd ./config/dev.env npx babel-node ./src/initializeCbServer.js",
     "start": "env-cmd ./config/dev.env nodemon --exec babel-node src/server",
     "clean": "rm -rf dist",
     "build": "npm run clean && babel ./src --out-dir dist --copy-files"
@@ -21,10 +23,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "couchbase": "3.1.1",
     "express": "^4.17.1",
+    "qs": "^6.10.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
