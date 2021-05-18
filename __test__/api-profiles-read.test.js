@@ -45,9 +45,8 @@ describe("GET /profiles", () => {
 
     test("should respond with status code 200 OK and return two documents", async() => {
       const response = await request(app).get(`/profiles`).send({
-        skip: 0, limit: 2, searchFirstName: 'jo'
+        skip: 1, limit: 2, searchFirstName: 'jo'
       })
-      console.log(response.body)
       expect(response.statusCode).toBe(200)
       expect(response.body.length).toBe(2)
     })

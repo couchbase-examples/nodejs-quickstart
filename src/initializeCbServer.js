@@ -1,18 +1,11 @@
-
 import qs from 'qs'
 import axios from 'axios'
+
+import { delay } from './delay.js'
 
 var username = process.env.CB_USER
 var password = process.env.CB_PASS
 var auth = `Basic ${Buffer.from(username + ':' + password).toString('base64')}`
-
-const delay = (t, val) => {
-  return new Promise(function(resolve) {
-    setTimeout(function() {
-      resolve(val)
-    }, t)
-  })
-}
 
 const restCreateBucket = async() => {
   const data = { name: process.env.CB_BUCKET, ramQuotaMB: 150 }
@@ -38,9 +31,10 @@ const restCreateCollection = async() => {
 
 const initializeBucketAndCollection = async() => {
   await restCreateBucket()
-  await delay(3000)
+  await delay(process.env.DELAY)
   await restCreateCollection()
-  await delay(3000)
+  await delay(process.env.DELAY)
+  console.log("## initiaize db script end ##")
 }
 
 initializeBucketAndCollection()

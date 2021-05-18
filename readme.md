@@ -42,6 +42,12 @@ If you would like to enable testing, once the database and the bucket(s) are set
 npm run init-test-db
 ```
 
+## Initialize Index
+
+```sh
+npm run init-test-index
+```
+
 ## Running The Tests
 
 ```sh
