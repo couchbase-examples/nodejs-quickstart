@@ -9,34 +9,10 @@ We will be using the latest version of Couchbase (version 7) that enables scopes
 To run this prebuilt project, you will need:
 
 - Couchbase 7 installed
-- Couchbase Bucket: `user_profile` *
-- Couchbase Collection: `profile` *
 - NodeJS & NPM (v12+)
 - Code Editor
-- cURL
 
-*After installation of Couchbase 7, and if it is running on localhost (http://127.0.0.1:8091) we can create a bucket named `user_profile` and a collection named `profile` using two curl commands that uses the Couchbase REST API:
-
-*Create Bucket First:*
-
-```sh
-curl -v -X POST http://127.0.0.1:8091/pools/default/buckets \
--u Administrator:password \
--d name=user_profile \
--d ramQuotaMB=256
-```
-
-*Then Create Collection:*
-
-```sh
-curl http://127.0.0.1:8091/pools/default/buckets/user_profile/collections/_default \
--u Administrator:password -X POST \
--d name=profile
-```
-
-If you would like to enable testing, you can run the same cURL commands replacing `user_profile` with `test_profile`.
-
-Once the database and the bucket(s) are set up you can run the development environment or the test environment.
+After cloning the repo, install required dependencies:
 
 ## Install Dependencies
 
@@ -44,10 +20,26 @@ Once the database and the bucket(s) are set up you can run the development envir
 npm install
 ```
 
+*After installation of Couchbase 7, and if it is running on localhost (http://127.0.0.1:8091) we can create a bucket named `user_profile` and a collection named `profile`, (required to run the REST API) by running the following commands:
+
+## Initialize Bucket and Collection
+
+```sh
+npm run init-db
+```
+
 ## Running The Application
 
 ```sh
 npm start
+```
+
+If you would like to enable testing, once the database and the bucket(s) are set up you can setup and run the tests.
+
+## Initialize Test Bucket and Collection
+
+```sh
+npm run init-test-db
 ```
 
 ## Running The Tests
