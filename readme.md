@@ -34,20 +34,6 @@ npm run init-db
 npm start
 ```
 
-If you would like to enable testing, once the database and the bucket(s) are set up you can setup and run the tests.
-
-## Initialize Test Bucket and Collection
-
-```sh
-npm run init-test-db
-```
-
-## Initialize Index
-
-```sh
-npm run init-test-index
-```
-
 ## Running The Tests
 
 ```sh
