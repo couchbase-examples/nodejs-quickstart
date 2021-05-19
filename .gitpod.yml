@@ -4,10 +4,12 @@ image:
 tasks:
 - name: Start Couchbase
   command:  cd /opt/couchbase/ && ./start-cb.sh
-- name: Create Bucket
-  command: while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' -u Administrator:password localhost:8091/pools/default)" != "200" ]]; do sleep 5; done && couchbase-cli bucket-create -c localhost:8091 --username Administrator --password password --bucket user_profile --bucket-type couchbase --bucket-ramsize 256
+# - name: Create Bucket
+#   command: while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' -u Administrator:password localhost:8091/pools/default)" != "200" ]]; do sleep 5; done && couchbase-cli bucket-create -c localhost:8091 --username Administrator --password password --bucket user_profile --bucket-type couchbase --bucket-ramsize 256
+# - name: Create Bucket
+#   command: while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' -u Administrator:password localhost:8091/pools/default)" != "200" ]]; do sleep 5; done && couchbase-cli collection-manage -c localhost --username Administrator --password password --bucket user_prfile --create-collection _default.profile
 - name: Start app
-  init: npm install
+  init: npm install && npm run init-db
   command: while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' -u Administrator:password localhost:8091/pools/default/buckets/user_profile)" != "200" ]]; do sleep 5; done && npm start
 
 # exposed ports
