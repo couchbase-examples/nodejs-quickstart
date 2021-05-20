@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }))
 import swaggerUi from 'swagger-ui-express'
 import YAML from 'yamljs'
 const swaggerDocument = YAML.load('./swagger.yaml')
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+app.use(['/'], swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 const ensureProfileIndex = async() => {
   try {
