@@ -11,6 +11,12 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+//swagger only
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+const swaggerDocument = YAML.load('./swagger.yaml');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 const ensureProfileIndex = async() => {
   try {
     const query = `
@@ -28,7 +34,7 @@ const ensureProfileIndex = async() => {
   }
 }
 
-app.post("/profiles", async (req, res) => {
+app.post("/profile", async (req, res) => {
   if (!req.body.email || !req.body.pass) {
     return res.status(400).send({ "message": `${!req.body.email ? 'email ' : ''}${
         (!req.body.email && !req.body.pass) 
@@ -47,7 +53,7 @@ app.post("/profiles", async (req, res) => {
     }))
 })
 
-app.put("/profiles/:pid", async (req, res) => {
+app.put("/profile/:pid", async (req, res) => {
   try {
     await profileCollection.get(req.params.pid)
       .then(async (result) => {
@@ -73,7 +79,7 @@ app.put("/profiles/:pid", async (req, res) => {
   }
 })
 
-app.delete("/profiles/:pid", async (req, res) => {
+app.delete("/profile/:pid", async (req, res) => {
   try {
     await profileCollection.remove(req.params.pid)
       .then((result) => res.send(result.value))
@@ -85,7 +91,7 @@ app.delete("/profiles/:pid", async (req, res) => {
   }
 })
 
-app.get("/profiles/:pid", async (req, res) => {
+app.get("/profile/:pid", async (req, res) => {
   try {
     await profileCollection.get(req.params.pid)
       .then((result) => res.send(result.value))
@@ -98,13 +104,13 @@ app.get("/profiles/:pid", async (req, res) => {
 })
 
 app.get("/profiles", async (req, res) => {
+  let firstName = req.query.searchFirstName.toLowerCase()
   try {
-    const { skip, limit, searchFirstName } = req.body
     const options = {
       parameters: {
-        SKIP: Number(skip || 0),
-        LIMIT: Number(limit || 5),
-        FNAME: `%${searchFirstName.toLowerCase()}%`
+        SKIP: Number(req.query.skip || 0),
+        LIMIT: Number(req.query.limit || 5),
+        FNAME: `%${firstName}%`
       }
     }
     const query = `

@@ -7,7 +7,7 @@ import {
 
 afterAll(async() => cluster.close())
 
-describe('POST /profiles', () => {
+describe('POST /profile', () => {
 
   const profile = {
     firstName: 'Joe', lastName: 'dev',
@@ -21,7 +21,7 @@ describe('POST /profiles', () => {
     console.log(`start of the test - this should be removed and is for debugging only `)
 
     test('should respond with statusCode 200 and return document persisted', async() => {
-      const response = await request(app).post('/profiles').send(profile)
+      const response = await request(app).post('/profile').send(profile)
       console.log(`log response from request ${response}`)
       pid = response.body.pid
       const hashedPass = response.body.pass
@@ -49,7 +49,7 @@ describe('POST /profiles', () => {
   describe('given a request without user & pass', () => {
     const expected = { statusCode: 400, message: 'email and pass are required' }
     test(`should respond with statusCode 400 and message: '${expected.message}'`, async() => {
-      const response = await request(app).post('/profiles').send({
+      const response = await request(app).post('/profile').send({
         firstName: profile.firstName,
         lastName: profile.lastName
       })
@@ -61,7 +61,7 @@ describe('POST /profiles', () => {
   describe('given the email is missing', () => {
     const expected = { statusCode: 400, message: 'email is required' }
     test(`should respond with statusCode 400 and message: ${expected.message}`, async() => {
-      const response = await request(app).post('/profiles').send({
+      const response = await request(app).post('/profile').send({
         firstName: profile.firstName,
         lastName: profile.lastName,
         pass: profile.pass
@@ -74,7 +74,7 @@ describe('POST /profiles', () => {
   describe('given the pass is missing', () => {
     const expected = { statusCode: 400, message: 'pass is required' }
     test(`should respond with statusCode 400 and message: '${expected.message}'`, async() => {
-      const response = await request(app).post('/profiles').send({
+      const response = await request(app).post('/profile').send({
         firstName: profile.firstName, 
         lastName: profile.lastName, 
         email: profile.email

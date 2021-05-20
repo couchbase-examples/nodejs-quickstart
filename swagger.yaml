@@ -1,0 +1,172 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in HTML.
+  version: 0.1.9
+servers:
+  - url: http://localhost:3000
+    description: localhost server port 3000
+paths:
+  /profile:
+    post:
+      summary: Post a User Profile
+      description: The C in CRUD
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                pass:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+              required:
+                - email
+                - pass
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema: 
+                type: object
+                items: 
+                  pid: string
+                  email: string
+                  pass: string
+                  firstName: string
+                  lastName: string
+                  cas: string
+                  token: string
+  /profile/{pid}:
+    get:
+      summary: Gets a single profile
+      description: The R (singluar) in CRUD
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Profile ID
+          type : string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                type: object
+                items: 
+                  pid: string
+                  email: string
+                  pass: string
+                  firstName: string
+                  lastName: string
+    put:
+      summary: Update a user Profile
+      description: The U in CRUD
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Profile ID
+          type : string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                pass:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+              required:
+                - email
+                - pass
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                type: object
+                items: 
+                  pid: string
+                  email: string
+                  pass: string
+                  firstName: string
+                  lastName: string
+                  cas: string
+                  token: string
+    delete:
+      summary: Delete a User Profile
+      description: The D in CRUD
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Profile ID
+          type : string
+      responses:
+        '200':
+          description: OK
+  /profiles:
+    get:
+      summary: Searches profiles by 'firstName'
+      description: The R in CRUD
+      parameters:
+        - in: query
+          name: skip
+          schema:
+            type: integer
+          description: The numbers of items to offset
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+        - in: query
+          name: searchFirstName
+          schema:
+            type: integer
+          description: The text to search 'first name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  - $ref: '#/components/schemas/ProfileModel'
+
+components:
+  schemas:
+    ProfileModel:
+      properties:
+        email:
+          type: string
+          example: john@doh.com
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Wick
+        pass:
+          type: string
+          example: $h45h3d5tr1n6!
+        pid:
+          type: string
+          example: 123456eb-1a2b-3c45-defg-67dhi89j0kl1

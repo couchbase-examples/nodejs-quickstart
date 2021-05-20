@@ -6,6 +6,8 @@ import {
 } from './imports'
 import { ensureProfileIndex } from '../src/app'
 
+import { delay } from '../src/delay'
+
 beforeAll(async() => await ensureProfileIndex())
 afterAll(async() => cluster.close())
 
@@ -44,25 +46,29 @@ describe("GET /profiles", () => {
     })
 
     test("should respond with status code 200 OK and return two documents", async() => {
-      const response = await request(app).get(`/profiles`).send({
-        skip: 1, limit: 2, searchFirstName: 'jo'
-      })
+      const response = await request(app)
+        .get(`/profiles`)
+        .query({
+          skip: 1, limit: 2, searchFirstName: 'jo'
+        })
+        console.log(response.body)
       expect(response.statusCode).toBe(200)
-      expect(response.body.length).toBe(2)
+      expect(response.body).toHaveLength(2)
     })
 
     afterEach(async() => {
+      await delay(2000)
       await profileCollection.remove(profile1.pid)
-        .then(() => {/*console.log('test profile document deleted', id)*/ })
+        .then(() => { /*console.log('test profile document deleted', id)*/ })
         .catch((e) => console.log(`test profile remove failed: ${e.message}`))
       await profileCollection.remove(profile2.pid)
-        .then(() => {/*console.log('test profile document deleted', id)*/ })
+        .then(() => { /*console.log('test profile document deleted', id)*/ })
         .catch((e) => console.log(`test profile remove failed: ${e.message}`))
       await profileCollection.remove(profile3.pid)
-        .then(() => {/*console.log('test profile document deleted', id)*/ })
+        .then(() => { /*console.log('test profile document deleted', id)*/ })
         .catch((e) => console.log(`test profile remove failed: ${e.message}`))
       await profileCollection.remove(profile4.pid)
-        .then(() => {/*console.log('test profile document deleted', id)*/ })
+        .then(() => { /*console.log('test profile document deleted', id)*/ })
         .catch((e) => console.log(`test profile remove failed: ${e.message}`))
     })
 

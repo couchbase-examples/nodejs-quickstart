@@ -7,31 +7,24 @@ import {
 
 afterAll(async() => cluster.close())
 
-describe("PUT /profiles", () => {
-  describe("given the profile object is updated", () => {
+describe("GET /profile/{id}", () => {
+  describe("given we pass a pid as request param", () => {
     const id = v4()
-    const initialProfile = {
+    const profile = {
       pid: id, firstName: "Joseph", lastName: "Developer",
       email: "joseph.developer@couchbase.com", pass: bcrypt.hashSync('mypassword', 10)
     }
-    const updatedProfile = {
-      firstName: "Joe", lastName: "dev",
-      email: "joe@dev.com", pass: "p455w3rd"
-    }
 
     beforeEach(async() => {
-      await profileCollection.insert(id, initialProfile)
+      await profileCollection.insert(id, profile)
         .then(() => {/*console.log('test profile document inserted', profile)*/ })
         .catch((e) => console.log(`test profile insert failed: ${e.message}`))
     })
 
-    test("should respond with status code 200 OK and updated values of document returned", async() => {
-      const response = await request(app).put(`/profiles/${id}`).send(updatedProfile)
+    test("should respond with status code 200 OK and return profile as object", async() => {
+      const response = await request(app).get(`/profile/${id}`).send()
       expect(response.statusCode).toBe(200)
-      expect(response.body.firstName).toBe(updatedProfile.firstName)
-      expect(response.body.lastName).toBe(updatedProfile.lastName)
-      expect(response.body.email).toBe(updatedProfile.email)
-      expect(response.body.pass).not.toBe(updatedProfile.pass)
+      expect(response.body).toMatchObject(profile)
     })
 
     afterEach(async() => {

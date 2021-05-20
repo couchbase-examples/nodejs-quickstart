@@ -7,7 +7,7 @@ import {
 
 afterAll(async() => cluster.close())
 
-describe("DELETE /profiles/{id}", () => {
+describe("DELETE /profile/{id}", () => {
   describe("given we pass a pid as request param", () => {
     const id = v4()
 
@@ -22,7 +22,7 @@ describe("DELETE /profiles/{id}", () => {
     })
 
     test("should respond with status code 200 OK", async() => {
-      const response = await request(app).delete(`/profiles/${id}`).send()
+      const response = await request(app).delete(`/profile/${id}`).send()
       expect(response.statusCode).toBe(200)
     })
 
