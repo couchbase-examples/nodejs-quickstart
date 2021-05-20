@@ -12,10 +12,10 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 //swagger only
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
-const swaggerDocument = YAML.load('./swagger.yaml');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+import swaggerUi from 'swagger-ui-express'
+import YAML from 'yamljs'
+const swaggerDocument = YAML.load('./swagger.yaml')
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 const ensureProfileIndex = async() => {
   try {
@@ -38,10 +38,8 @@ app.post("/profile", async (req, res) => {
   if (!req.body.email || !req.body.pass) {
     return res.status(400).send({ "message": `${!req.body.email ? 'email ' : ''}${
         (!req.body.email && !req.body.pass) 
-          ? 'and pass are required' 
-          : (req.body.email && !req.body.pass) 
-            ? 'pass is required' 
-            : 'is required'}`})
+          ? 'and pass are required' : (req.body.email && !req.body.pass) 
+            ? 'pass is required' : 'is required'}`})
   }
 
   const id = v4()
@@ -51,6 +49,18 @@ app.post("/profile", async (req, res) => {
     .catch((e) => res.status(500).send({
       "message": `Profile Insert Failed: ${e.message}`
     }))
+})
+
+app.get("/profile/:pid", async (req, res) => {
+  try {
+    await profileCollection.get(req.params.pid)
+      .then((result) => res.send(result.value))
+      .catch((error) => res.status(500).send({
+        "message": `Query failed: ${error.message}`
+      }))
+  } catch (error) {
+    console.error(error)
+  }
 })
 
 app.put("/profile/:pid", async (req, res) => {
@@ -88,18 +98,6 @@ app.delete("/profile/:pid", async (req, res) => {
       }))
   } catch (e) {
     console.error(e)
-  }
-})
-
-app.get("/profile/:pid", async (req, res) => {
-  try {
-    await profileCollection.get(req.params.pid)
-      .then((result) => res.send(result.value))
-      .catch((error) => res.status(500).send({
-        "message": `Query failed: ${error.message}`
-      }))
-  } catch (error) {
-    console.error(error)
   }
 })
 
