@@ -206,22 +206,22 @@
 					"urlencoded": [
 						{
 							"key": "email",
-							"value": "johnnywick@couchbase.com",
+							"value": "johndohz@couchbase.com",
 							"type": "text"
 						},
 						{
 							"key": "pass",
-							"value": "mypassword1234",
+							"value": "p455w3rd",
 							"type": "text"
 						},
 						{
 							"key": "firstName",
-							"value": "Johnny",
+							"value": "John",
 							"type": "text"
 						},
 						{
 							"key": "lastName",
-							"value": "Wicked",
+							"value": "Dohz",
 							"type": "text"
 						},
 						{
@@ -269,7 +269,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{cb_url}}/profiles?skip=0&limit=5&searchFirstName=jo",
+					"raw": "{{cb_url}}/profiles?skip=0&limit=1&searchFirstName=john",
 					"host": [
 						"{{cb_url}}"
 					],
@@ -283,7 +283,7 @@
 						},
 						{
 							"key": "limit",
-							"value": "5"
+							"value": "1"
 						},
 						{
 							"key": "searchFirstName",
