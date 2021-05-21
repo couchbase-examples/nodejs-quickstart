@@ -31,7 +31,7 @@ describe('POST /profile', () => {
       expect(response.statusCode).toBe(expected.statusCode)
       bcrypt.compare(profile.pass, hashedPass, function(err, result) {
         expect(result).toBe(true)
-      });
+      })
       expect(pid.length).toBe(36)
       expect(response.body).toMatchObject({
         firstName: profile.firstName, lastName: profile.lastName, email: profile.email

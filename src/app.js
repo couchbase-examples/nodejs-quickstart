@@ -29,9 +29,9 @@ const ensureProfileIndex = async() => {
     console.log(`Index Creation: ${result.meta.status}`)
   } catch (err) {
     if (err instanceof couchbase.IndexExistsError) {
-      console.info('Index Creation: Index Already Exists');
+      console.info('Index Creation: Index Already Exists')
     } else {
-      console.error(err);
+      console.error(err)
     }
   }
 }
