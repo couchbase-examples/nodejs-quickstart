@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: Sample API
-  description: Optional multiline or single-line description in HTML.
-  version: 0.1.9
+  title: Profile Store API
+  description: Simple Profile Store API built with NodeJS, Express, Babel, and Couchbase
+  version: 0.1.0
 servers:
   - url: http://localhost:3000
     description: localhost server port 3000
@@ -10,63 +10,50 @@ paths:
   /profile:
     post:
       summary: Post a User Profile
-      description: The C in CRUD
+      description: Post a User Profile
       requestBody:
         required: true
         content:
           application/x-www-form-urlencoded:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                pass:
-                  type: string
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-              required:
-                - email
-                - pass
+              $ref: '#/components/schemas/ProfileRequest'
       responses:
         '200':
           description: Created
           content:
             application/json:
-              schema: 
-                type: object
-                items: 
-                  pid: string
-                  email: string
-                  pass: string
-                  firstName: string
-                  lastName: string
-                  cas: string
-                  token: string
+              schema:
+                $ref: '#/components/schemas/ProfileCreatedResponse'
+        '500':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutProfileBadResponse'
   /profile/{pid}:
     get:
-      summary: Gets a single profile
+      summary: Returns a single User Profile
       description: The R (singluar) in CRUD
       parameters:
         - name: pid
           in: path
+          description: ID of User Profile to return
           required: true
-          description: Profile ID
-          type : string
+          schema:
+            type:  string
       responses:
         '200':
           description: OK
           content:
             application/json:
-              schema: 
-                type: object
-                items: 
-                  pid: string
-                  email: string
-                  pass: string
-                  firstName: string
-                  lastName: string
+              schema:
+                $ref: '#/components/schemas/ProfileBasic'
+        '500':
+          description: KV Operation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProfileDocumentNotFound'
     put:
       summary: Update a user Profile
       description: The U in CRUD
@@ -75,52 +62,46 @@ paths:
           in: path
           required: true
           description: Profile ID
-          type : string
+          schema:
+            type: string
       requestBody:
         required: true
         content:
           application/x-www-form-urlencoded:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                pass:
-                  type: string
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-              required:
-                - email
-                - pass
+              $ref: '#/components/schemas/ProfileRequest'
       responses:
         '200':
           description: OK
           content:
             application/json:
-              schema: 
-                type: object
-                items: 
-                  pid: string
-                  email: string
-                  pass: string
-                  firstName: string
-                  lastName: string
-                  cas: string
-                  token: string
+              schema:
+                $ref: '#/components/schemas/ProfileUpdateResponse'
+        '500':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutProfileDocumentNotFound'
     delete:
-      summary: Delete a User Profile
-      description: The D in CRUD
+      summary: Delete Profile
+      description: Delete a single User Profile
       parameters:
         - name: pid
           in: path
           required: true
           description: Profile ID
-          type : string
+          schema:
+            type : string
       responses:
         '200':
           description: OK
+        '500':
+          description: Delete Failed
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/DeleteProfileDocumentNotFound'
   /profiles:
     get:
       summary: Searches profiles by 'firstName'
@@ -139,7 +120,7 @@ paths:
         - in: query
           name: searchFirstName
           schema:
-            type: integer
+            type: string
           description: The text to search 'first name'
       responses:
         '200':
@@ -147,26 +128,131 @@ paths:
           content:
             application/json:
               schema: 
-                type: array
-                items:
-                  - $ref: '#/components/schemas/ProfileModel'
+                $ref: '#/components/schemas/ArrayOfProfiles'
 
 components:
   schemas:
-    ProfileModel:
+    ProfileRequest:
+      required:
+        - email
+        - pass
+      type: object
       properties:
         email:
           type: string
-          example: john@doh.com
+          example: johndohz@couchbase.com
+        pass:
+          type: string
+          example: p455w3rd
         firstName:
           type: string
           example: John
         lastName:
           type: string
-          example: Wick
-        pass:
-          type: string
-          example: $h45h3d5tr1n6!
+          example: Dohz
+    ProfileBasic:
+      properties: 
         pid:
           type: string
-          example: 123456eb-1a2b-3c45-defg-67dhi89j0kl1
+          example: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
+        email:
+          type: string
+          example: 'johndoh@couchbase.com'
+        firstName:
+          type: string
+          example: 'John'
+        lastName:
+          type: string
+          example: 'Dohz'
+        pass:
+          type: string
+          example: '$h45h3d5tr1n6!'
+    ProfileCreatedResponse:
+      properties:
+        pid:
+          type: string
+          example: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
+        email:
+          type: string
+          example: 'johndoh@couchbase.com'
+        pass:
+          type: string
+          example: '$h45h3d5tr1n6!'
+        firstName:
+          type: string
+          example: 'John'
+        lastName:
+          type: string
+          example: 'Dohz'
+        cas:
+          type: string
+          example: '1621568977675026432'
+        token:
+          type: string
+          example: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
+    ProfileUpdateResponse:
+      properties:
+        pid:
+          type: string
+          example: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
+        email:
+          type: string
+          example: 'johndoh@couchbase.com'
+        pass:
+          type: string
+          example: '$h45h3d5tr1n6!'
+        firstName:
+          type: string
+          example: 'John'
+        lastName:
+          type: string
+          example: 'Dohz'
+        cas:
+          type: string
+          example: '1621568977675026432'
+        token:
+          type: string
+          example: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
+    ArrayOfProfiles:
+      type: array
+      items:
+        type: object
+        properties:
+          pid:
+            type: string
+          email:
+            type: string
+          pass:
+            type: string
+            example: 
+          firstName:
+            type: string
+          lastName:
+            type: string
+            example: 
+      example:
+        - pid: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
+          email: 'johndohz@couchbase.com'
+          pass: '$h45h3d5tr1n6!'
+          firstname: 'John'
+          lastName: 'Dohz'
+    GetProfileDocumentNotFound:
+      properties:
+        message:
+          type: string
+          example: '"KV Operation Failed: document not found"'
+    PutProfileBadResponse:
+      properties:
+        message:
+          type: string
+          example: 'email and pass are required'
+    PutProfileDocumentNotFound:
+      properties:
+        message:
+          type: string
+          example: 'Profile Not Found, cannot update: 123456eb-1a2b-3c45-defg-67dhi89j0kl1'
+    DeleteProfileDocumentNotFound:
+      properties:
+        message:
+          type: string
+          example: 'Profile Not Found, cannot update: 123456eb-1a2b-3c45-defg-67dhi89j0kl1'

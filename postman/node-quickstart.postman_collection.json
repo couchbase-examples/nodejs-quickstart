@@ -1,0 +1,298 @@
+{
+	"info": {
+		"_postman_id": "06ccf9ca-276c-4907-8691-99a5423af5db",
+		"name": "Node Quickstart",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Bucket",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "Administrator",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "user_profile",
+							"type": "text"
+						},
+						{
+							"key": "ramQuotaMB",
+							"value": "150",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8091/pools/default/buckets",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8091",
+					"path": [
+						"pools",
+						"default",
+						"buckets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Collection",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "Administrator",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "profile",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8091/pools/default/buckets/user_profile/collections/_default",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8091",
+					"path": [
+						"pools",
+						"default",
+						"buckets",
+						"user_profile",
+						"collections",
+						"_default"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"pid\", jsonData.pid);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "{{email}}",
+							"type": "text"
+						},
+						{
+							"key": "pass",
+							"value": "{{password}}",
+							"type": "text"
+						},
+						{
+							"key": "firstName",
+							"value": "{{firstName}}",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "{{lastName}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{cb_url}}/profile/",
+					"host": [
+						"{{cb_url}}"
+					],
+					"path": [
+						"profile",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "profile/{id}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{cb_url}}/profile/{{pid}}",
+					"host": [
+						"{{cb_url}}"
+					],
+					"path": [
+						"profile",
+						"{{pid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "profile/{id}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"pid\", jsonData.pid);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "johnnywick@couchbase.com",
+							"type": "text"
+						},
+						{
+							"key": "pass",
+							"value": "mypassword1234",
+							"type": "text"
+						},
+						{
+							"key": "firstName",
+							"value": "Johnny",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "Wicked",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{cb_url}}/profile/{{pid}}",
+					"host": [
+						"{{cb_url}}"
+					],
+					"path": [
+						"profile",
+						"{{pid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "profile/{id}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{cb_url}}/profile/{{pid}}",
+					"host": [
+						"{{cb_url}}"
+					],
+					"path": [
+						"profile",
+						"{{pid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "profiles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{cb_url}}/profiles?skip=0&limit=5&searchFirstName=jo",
+					"host": [
+						"{{cb_url}}"
+					],
+					"path": [
+						"profiles"
+					],
+					"query": [
+						{
+							"key": "skip",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						},
+						{
+							"key": "searchFirstName",
+							"value": "jo"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
