@@ -4,7 +4,7 @@ This is a companion repository for: "Profile Store in Couchbase with Node JS and
 
 We will be using the latest version of Couchbase (version 7) that enables scopes and collections.
 
-[![Try it now!](https://da-demo-images.s3.amazonaws.com/runItNow_outline.png?couchbase-example=nodejs-quickstart-repo&location=github)](https://gitpod.io/#https://github.com/couchbase-examples/nodejs-quickstart)
+[![Try it now!](https://da-demo-images.s3.amazonaws.com/runItNow_outline.png?couchbase-example=nodejs-quickstart-repo)](https://gitpod.io/#https://github.com/couchbase-examples/nodejs-quickstart)
 
 ## Prerequisites
 
