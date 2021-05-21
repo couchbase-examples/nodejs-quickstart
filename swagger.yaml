@@ -6,9 +6,16 @@ info:
 servers:
   - url: http://localhost:3000
     description: localhost server port 3000
+tags:
+  - name: profile
+    description: KV operations for a singular User Profile
+  - name: profiles
+    description: Query for searching User Profiles
 paths:
   /profile:
     post:
+      tags:
+        - profile
       summary: Post a User Profile
       description: Post a User Profile
       requestBody:
@@ -32,6 +39,8 @@ paths:
                 $ref: '#/components/schemas/PutProfileBadResponse'
   /profile/{pid}:
     get:
+      tags:
+        - profile
       summary: Returns a single User Profile
       description: The R (singluar) in CRUD
       parameters:
@@ -55,6 +64,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetProfileDocumentNotFound'
     put:
+      tags:
+        - profile
       summary: Update a user Profile
       description: The U in CRUD
       parameters:
@@ -84,6 +95,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PutProfileDocumentNotFound'
     delete:
+      tags:
+        - profile
       summary: Delete Profile
       description: Delete a single User Profile
       parameters:
@@ -104,6 +117,8 @@ paths:
                 $ref: '#/components/schemas/DeleteProfileDocumentNotFound'
   /profiles:
     get:
+      tags:
+        - profiles
       summary: Searches profiles by 'firstName'
       description: The R in CRUD
       parameters:
@@ -112,16 +127,19 @@ paths:
           schema:
             type: integer
           description: The numbers of items to offset
+          example: 0
         - in: query
           name: limit
           schema:
             type: integer
           description: The numbers of items to return
+          example: 1
         - in: query
           name: searchFirstName
           schema:
             type: string
           description: The text to search 'first name'
+          example: jo
       responses:
         '200':
           description: OK
@@ -129,7 +147,12 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/ArrayOfProfiles'
-
+        '500':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProfilesDocumentNotFound'
 components:
   schemas:
     ProfileRequest:
@@ -240,7 +263,7 @@ components:
       properties:
         message:
           type: string
-          example: '"KV Operation Failed: document not found"'
+          example: 'KV Operation Failed: document not found'
     PutProfileBadResponse:
       properties:
         message:
@@ -256,3 +279,8 @@ components:
         message:
           type: string
           example: 'Profile Not Found, cannot update: 123456eb-1a2b-3c45-defg-67dhi89j0kl1'
+    GetProfilesDocumentNotFound:
+      properties:
+        message:
+          type: string
+          example: 'Query Failed: {Error Message}'
