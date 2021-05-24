@@ -22,8 +22,7 @@ app.get('/', function (req, res) {
 const ensureProfileIndex = async() => {
   try {
     const query = `
-      CREATE INDEX profile_lower_firstName 
-      ON default:${process.env.CB_BUCKET}._default.profile(lower(\`firstName\`));
+      CREATE PRIMARY INDEX ON default:${process.env.CB_BUCKET}._default.profile
     `
     const result = await cluster.query(query)
     console.log(`Index Creation: ${result.meta.status}`)
@@ -105,19 +104,18 @@ app.delete("/profile/:pid", async (req, res) => {
 })
 
 app.get("/profiles", async (req, res) => {
-  let firstName = req.query.searchFirstName.toLowerCase()
   try {
     const options = {
       parameters: {
         SKIP: Number(req.query.skip || 0),
         LIMIT: Number(req.query.limit || 5),
-        FNAME: `%${firstName}%`
+        SEARCH: `%${req.query.search.toLowerCase()}%`
       }
     }
     const query = `
       SELECT p.*
       FROM ${process.env.CB_BUCKET}._default.profile p
-      WHERE lower(p.firstName) LIKE $FNAME
+      WHERE lower(p.firstName) LIKE $SEARCH OR lower(p.lastName) LIKE $SEARCH
       LIMIT $LIMIT OFFSET $SKIP;
     `
     await cluster.query(query, options)
