@@ -1,10 +1,10 @@
 # Profile Store in Couchbase with Node JS and Express
 
+[![Try it now!](https://da-demo-images.s3.amazonaws.com/runItNow_outline.png?couchbase-example=nodejs-quickstart-repo&source=github)](https://gitpod.io/#https://github.com/couchbase-examples/nodejs-quickstart)
+
 This is a companion repository for: "Profile Store in Couchbase with Node JS and Express" at [developer.couchbase.com](https://developer.couchbase.com), which aims to get you up and running with Couchbase and the NodeJS SDK, connect to a Couchbase cluster, create, read, update, and delete documents, and how to write simple parameterized N1QL queries.
 
 We will be using the latest version of Couchbase (version 7) that enables scopes and collections.
-
-[![Try it now!](https://da-demo-images.s3.amazonaws.com/runItNow_outline.png?couchbase-example=nodejs-quickstart-repo&source=github)](https://gitpod.io/#https://github.com/couchbase-examples/nodejs-quickstart)
 
 ## Prerequisites
 
