@@ -1,5 +1,5 @@
 import { restCreateBucket, restCreateCollection, delay } from './initializeCbServer'
-import { app, ensureProfileIndex } from './app.js'
+import { app, ensureIndexes } from './app.js'
 
 const initializeBucketAndCollection = async () => {
   await restCreateBucket()
@@ -8,7 +8,7 @@ const initializeBucketAndCollection = async () => {
 }
 
 const setupIndex = async () => {
-  await ensureProfileIndex()
+  await ensureIndexes()
   console.log(' Index script done...')
 }
 

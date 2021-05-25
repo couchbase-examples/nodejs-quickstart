@@ -1,8 +1,8 @@
-import { ensureProfileIndex } from './app.js'
+import { ensureIndexes } from './app.js'
 import { delay } from './delay.js'
 
 const initializeIndex = async() => {
-  await ensureProfileIndex()
+  await ensureIndexes()
   await delay(process.env.DELAY)
   console.log("## init-test-index script end ##")
 }

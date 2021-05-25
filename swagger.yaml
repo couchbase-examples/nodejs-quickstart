@@ -3,9 +3,6 @@ info:
   title: Profile Store API
   description: Simple Profile Store API built with NodeJS, Express, Babel, and Couchbase
   version: 0.1.0
-servers:
-  - url: http://localhost:3000
-    description: localhost server port 3000
 tags:
   - name: profile
     description: KV operations for a singular User Profile

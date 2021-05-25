@@ -18,23 +18,17 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.get('/', function (req, res) {
   res.send('<a href="/api-docs">Profile Store Docs</a>')
 })
-// app.options('*', cors())
 
-const ensureProfileIndex = async () => {
+const ensureIndexes = async() => {
   try {
-    const query1 = `
-      CREATE PRIMARY INDEX ON default:${process.env.CB_BUCKET}._default.profile
-    `
-    const result1 = await cluster.query(query1)
-    console.log(`Index Creation: ${result1.meta.status}`)
-    const query2 = `
-    CREATE PRIMARY INDEX ON ${process.env.CB_BUCKET}
-  `
-    const result2 = await cluster.query(query2)
-    console.log(`Index Creation: ${result2.meta.status}`)
+    const bucketIndex = `CREATE PRIMARY INDEX ON ${process.env.CB_BUCKET}`
+    const collectionIndex = `CREATE PRIMARY INDEX ON default:${process.env.CB_BUCKET}._default.profile;`
+    await cluster.query(bucketIndex)
+    await cluster.query(collectionIndex)
+    console.log(`Index Creation: SUCCESS`)
   } catch (err) {
     if (err instanceof couchbase.IndexExistsError) {
-      console.info('Index Creation: Index Already Exists')
+      console.info('Index Creation: Indexes Already Exists')
     } else {
       console.error(err)
     }
@@ -43,12 +37,11 @@ const ensureProfileIndex = async () => {
 
 app.post("/profile", async (req, res) => {
   if (!req.body.email || !req.body.pass) {
-    return res.status(400).send({
-      "message": `${!req.body.email ? 'email ' : ''}${(!req.body.email && !req.body.pass)
-          ? 'and pass are required' : (req.body.email && !req.body.pass)
-            ? 'pass is required' : 'is required'
-        }`
-    })
+    return res.status(400).send({ "message": `${!req.body.email ? 'email ' : ''}${
+      (!req.body.email && !req.body.pass) 
+        ? 'and pass are required' : (req.body.email && !req.body.pass) 
+          ? 'pass is required' : 'is required'
+    }`})
   }
 
   const id = v4()
@@ -135,4 +128,4 @@ app.get("/profiles", async (req, res) => {
   }
 })
 
-module.exports = { app, ensureProfileIndex }
+module.exports = { app, ensureIndexes }
