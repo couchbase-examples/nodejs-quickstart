@@ -35,7 +35,7 @@ const ensureProfileIndex = async() => {
   }
 }
 
-app.post("/profile", cors(corsOptionsDelegate), async (req, res) => {
+app.post("/profile", async (req, res) => {
   if (!req.body.email || !req.body.pass) {
     return res.status(400).send({ "message": `${!req.body.email ? 'email ' : ''}${
       (!req.body.email && !req.body.pass) 
@@ -53,7 +53,7 @@ app.post("/profile", cors(corsOptionsDelegate), async (req, res) => {
     }))
 })
 
-app.get("/profile/:pid", cors(corsOptionsDelegate), async (req, res) => {
+app.get("/profile/:pid", async (req, res) => {
   try {
     await profileCollection.get(req.params.pid)
       .then((result) => res.send(result.value))
@@ -65,7 +65,7 @@ app.get("/profile/:pid", cors(corsOptionsDelegate), async (req, res) => {
   }
 })
 
-app.put("/profile/:pid", cors(corsOptionsDelegate), async (req, res) => {
+app.put("/profile/:pid", async (req, res) => {
   try {
     await profileCollection.get(req.params.pid)
       .then(async (result) => {
@@ -91,7 +91,7 @@ app.put("/profile/:pid", cors(corsOptionsDelegate), async (req, res) => {
   }
 })
 
-app.delete("/profile/:pid", cors(corsOptionsDelegate), async (req, res) => {
+app.delete("/profile/:pid", async (req, res) => {
   try {
     await profileCollection.remove(req.params.pid)
       .then((result) => res.send(result.value))
@@ -103,7 +103,7 @@ app.delete("/profile/:pid", cors(corsOptionsDelegate), async (req, res) => {
   }
 })
 
-app.get("/profiles", cors(corsOptionsDelegate), async (req, res) => {
+app.get("/profiles", async (req, res) => {
   try {
     const options = {
       parameters: {
