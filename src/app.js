@@ -7,6 +7,17 @@ import { couchbase, cluster, profileCollection } from '../db/connection'
 
 const app = express()
 
+var allowlist = ['https://gitpod.io', 'http://localhost:3000']
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false } // disable CORS for this request
+  }
+  callback(null, corsOptions) // callback expects two parameters: error and options
+}
+
 app.options('*', cors())
 // app.use(cors())
 app.use(express.json())
@@ -36,7 +47,7 @@ const ensureProfileIndex = async() => {
   }
 }
 
-app.post("/profile", async (req, res) => {
+app.post("/profile", cors(corsOptionsDelegate), async (req, res) => {
   if (!req.body.email || !req.body.pass) {
     return res.status(400).send({ "message": `${!req.body.email ? 'email ' : ''}${
       (!req.body.email && !req.body.pass) 
@@ -54,7 +65,7 @@ app.post("/profile", async (req, res) => {
     }))
 })
 
-app.get("/profile/:pid", async (req, res) => {
+app.get("/profile/:pid", cors(corsOptionsDelegate), async (req, res) => {
   try {
     await profileCollection.get(req.params.pid)
       .then((result) => res.send(result.value))
@@ -66,7 +77,7 @@ app.get("/profile/:pid", async (req, res) => {
   }
 })
 
-app.put("/profile/:pid", async (req, res) => {
+app.put("/profile/:pid", cors(corsOptionsDelegate), async (req, res) => {
   try {
     await profileCollection.get(req.params.pid)
       .then(async (result) => {
@@ -92,7 +103,7 @@ app.put("/profile/:pid", async (req, res) => {
   }
 })
 
-app.delete("/profile/:pid", async (req, res) => {
+app.delete("/profile/:pid", cors(corsOptionsDelegate), async (req, res) => {
   try {
     await profileCollection.remove(req.params.pid)
       .then((result) => res.send(result.value))
@@ -104,7 +115,7 @@ app.delete("/profile/:pid", async (req, res) => {
   }
 })
 
-app.get("/profiles", async (req, res) => {
+app.get("/profiles", cors(corsOptionsDelegate), async (req, res) => {
   try {
     const options = {
       parameters: {
