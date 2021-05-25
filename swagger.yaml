@@ -135,10 +135,10 @@ paths:
           description: The numbers of items to return
           example: 1
         - in: query
-          name: searchFirstName
+          name: search
           schema:
             type: string
-          description: The text to search 'first name'
+          description: The text to search first and last name
           example: jo
       responses:
         '200':
