@@ -18,7 +18,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.get('/', function (req, res) {
   res.send('<a href="/api-docs">Profile Store Docs</a>')
 })
-app.options('*', cors())
+// app.options('*', cors())
 
 const ensureProfileIndex = async () => {
   try {
