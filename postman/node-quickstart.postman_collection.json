@@ -154,9 +154,9 @@
 					]
 				},
 				"url": {
-					"raw": "{{cb_url}}/profile/",
+					"raw": "{{api_url}}/profile/",
 					"host": [
-						"{{cb_url}}"
+						"{{api_url}}"
 					],
 					"path": [
 						"profile",
@@ -172,9 +172,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{cb_url}}/profile/{{pid}}",
+					"raw": "{{api_url}}/profile/{{pid}}",
 					"host": [
-						"{{cb_url}}"
+						"{{api_url}}"
 					],
 					"path": [
 						"profile",
@@ -233,9 +233,9 @@
 					]
 				},
 				"url": {
-					"raw": "{{cb_url}}/profile/{{pid}}",
+					"raw": "{{api_url}}/profile/{{pid}}",
 					"host": [
-						"{{cb_url}}"
+						"{{api_url}}"
 					],
 					"path": [
 						"profile",
@@ -251,9 +251,9 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{cb_url}}/profile/{{pid}}",
+					"raw": "{{api_url}}/profile/{{pid}}",
 					"host": [
-						"{{cb_url}}"
+						"{{api_url}}"
 					],
 					"path": [
 						"profile",
@@ -269,9 +269,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{cb_url}}/profiles?skip=0&limit=1&searchFirstName=john",
+					"raw": "{{api_url}}/profiles?skip=0&limit=1&search=john",
 					"host": [
-						"{{cb_url}}"
+						"{{api_url}}"
 					],
 					"path": [
 						"profiles"
@@ -286,7 +286,7 @@
 							"value": "1"
 						},
 						{
-							"key": "searchFirstName",
+							"key": "search",
 							"value": "jo"
 						}
 					]

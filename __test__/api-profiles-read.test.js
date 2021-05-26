@@ -28,12 +28,12 @@ beforeAll(async () => {
 beforeEach(async() => await delay(2000))
 
 describe("GET /profiles", () => {
-  describe("given we get profiles with skip 1, limit 2, and searchFirstName starts with 'jo'", () => {
+  describe("given we get profiles with skip 1, limit 2, and search text of 'jo'", () => {
     test("should respond with status code 200 OK and return two documents", async () => {
       const response = await request(app)
         .get(`/profiles`)
         .query({
-          skip: 0, limit: 2, searchFirstName: 'jo'
+          skip: 0, limit: 2, search: 'jo'
         })
       expect(response.statusCode).toBe(200)
       expect(response.body).toHaveLength(2)
