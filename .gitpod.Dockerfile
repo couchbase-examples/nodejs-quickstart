@@ -5,7 +5,6 @@ RUN echo "* soft nproc 20000\n"\
 "* soft nofile 200000\n"\
 "* hard nofile 200000\n" >> /etc/security/limits.conf
 
-#Simple example on how to extend the image to install Java and maven
 RUN apt-get -qq update && \
      apt-get install -yq nodejs npm sudo
 
