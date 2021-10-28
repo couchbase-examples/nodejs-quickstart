@@ -18,7 +18,7 @@ describe('POST /profile', () => {
     const expected = { statusCode: 200, message: 'email and pass are required' }
     let pid
 
-    console.log(`start of the test - this should be removed and is for debugging only `)
+    console.log(`start of the test`)
 
     test('should respond with statusCode 200 and return document persisted', async() => {
       const response = await request(app).post('/profile').send(profile)
