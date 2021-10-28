@@ -28,7 +28,7 @@
     "axios": "^0.21.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "couchbase": "3.1.1",
+    "couchbase": "^3.1.1",
     "express": "^4.17.1",
     "qs": "^6.10.1",
     "swagger-ui-express": "^4.1.6",
