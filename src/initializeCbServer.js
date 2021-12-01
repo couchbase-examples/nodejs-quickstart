@@ -41,7 +41,9 @@ const restCreateCollection = async() => {
     url: `http://127.0.0.1:8091/pools/default/buckets/${process.env.CB_BUCKET}/scopes/_default/collections`
   })
       .catch((error) => {
-        if (error.response.status === 404) {
+        if (error.response === undefined) {
+          console.error("Error Creating Collection:", error.code);
+        } else if (error.response.status === 404) {
           console.error(`Error Creating Collection: bucket \'${COUCHBASE_BUCKET}\' not found. \n`)
         } else {
           console.log(`Collection may already exist: ${error.message} \n`)
