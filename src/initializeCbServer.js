@@ -16,6 +16,10 @@ const restCreateBucket = async() => {
     url: 'http://127.0.0.1:8091/pools/default/buckets',
   })
       .catch((error) => {
+        console.log("***");
+        console.log(error.response);
+        console.log("***");
+        console.log(error.response.data);
         if (error.response.data.errors && error.response.data.errors.name) {
           console.error("Error Creating Bucket:", error.response.data.errors.name);
         } else if (error.response.data.errors && error.response.data.errors.ramQuota) {
