@@ -53,9 +53,3 @@ const initializeBucketAndCollection = async() => {
 }
 
 initializeBucketAndCollection()
-
-// module.exports = {
-//   restCreateBucket,
-//   restCreateCollection,
-//   delay
-// }
