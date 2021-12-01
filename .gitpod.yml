@@ -26,4 +26,3 @@ github:
     branches: true
     pullRequests: true
     addCheck: true
-    addBadge: true
