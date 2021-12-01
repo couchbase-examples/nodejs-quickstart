@@ -17,6 +17,8 @@ const restCreateBucket = async() => {
   })
       .catch((error) => {
         console.log("***");
+        console.log(error);
+        console.log("***");
         console.log(error.response);
         console.log("***");
         console.log(error.response.data);
