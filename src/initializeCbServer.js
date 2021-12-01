@@ -16,19 +16,18 @@ const restCreateBucket = async() => {
     url: 'http://127.0.0.1:8091/pools/default/buckets',
   })
       .catch((error) => {
-        console.log("***");
-        console.log(error);
-        console.log("***");
-        console.log(error.response);
-        console.log("***");
-        console.log(error.response.data);
-        if (error.response.data.errors && error.response.data.errors.name) {
-          console.error("Error Creating Bucket:", error.response.data.errors.name);
+        if (error.response === undefined) {
+          console.error("Error Creating Bucket:", error.code);
+        } else if (error.response.data.errors && error.response.data.errors.name) {
+          console.error("Error Creating Bucket:", error.response.data.errors.name, "\n");
         } else if (error.response.data.errors && error.response.data.errors.ramQuota) {
           console.error("Error Creating Bucket:", error.response.data.errors.ramQuota);
           console.log("Try deleting other buckets or increasing cluster size. \n");
+        } else if (error.response.data.errors) {
+          console.error("Error Creating Bucket: ");
+          console.error(error.response.data.errors, "\n");
         } else {
-          console.log(`Bucket may already exist: ${error.message} \n`);
+          console.error("Error Creating Bucket:", error.message);
         }
       })
 }
