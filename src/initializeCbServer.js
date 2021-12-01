@@ -33,7 +33,7 @@ const restCreateCollection = async() => {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded', 'Authorization': auth },
     data: qs.stringify(data),
-    url: `http://127.0.0.1:8091/pools/default/buckets/${process.env.CB_BUCKET}/scopes/_default/collections`,
+    url: `http://127.0.0.1:8091/pools/default/buckets/${process.env.CB_BUCKET}/scopes/_default/collections`
   })
       .catch((error) => {
         if (error.response.status === 404) {
