@@ -3,12 +3,12 @@ image:
 
 tasks:
 - name: Start Couchbase
-  command:  ./startcb.sh
+  command:  ./startcb.sh && gp sync-done startcb
 - name: Log use
   command: curl -s 'https://da-demo-images.s3.amazonaws.com/runItNow_outline.png?couchbase-example=nodejs-quickstart-repo&source=gitpod' > /dev/null
 - name: Start app
-  init: npm install && npm run init-db
-  command: while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' -u Administrator:password localhost:8091/pools/default/buckets/user_profile)" != "200" ]]; do sleep 5; done && npm start
+  init: npm install
+  command: gp sync-await startcb && npm run init-db && while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' -u Administrator:password localhost:8091/pools/default/buckets/user_profile)" != "200" ]]; do sleep 5; done && npm start
 
 ports:
 - port: 3000
@@ -23,3 +23,6 @@ ports:
 github:
   prebuilds:
     master: true
+    branches: true
+    pullRequests: true
+    addCheck: true
