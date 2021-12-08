@@ -15,7 +15,7 @@ describe('POST /profile', () => {
   }
 
   describe('given a request with user & pass', () => {
-    const expected = { statusCode: 400, message: 'email and pass are required' }
+    const expected = { statusCode: 200, message: 'email and pass are required' }
     let pid
 
     console.log(`start of the test`)
