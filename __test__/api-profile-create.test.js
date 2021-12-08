@@ -15,7 +15,7 @@ describe('POST /profile', () => {
   }
 
   describe('given a request with user & pass', () => {
-    const expected = { statusCode: 200, message: 'email and pass are required' }
+    const expected = { statusCode: 400, message: 'email and pass are required' }
     let pid
 
     console.log(`start of the test`)
@@ -45,7 +45,7 @@ describe('POST /profile', () => {
     })
 
   })
-  
+
   describe('given a request without user & pass', () => {
     const expected = { statusCode: 400, message: 'email and pass are required' }
     test(`should respond with statusCode 400 and message: '${expected.message}'`, async() => {
@@ -75,8 +75,8 @@ describe('POST /profile', () => {
     const expected = { statusCode: 400, message: 'pass is required' }
     test(`should respond with statusCode 400 and message: '${expected.message}'`, async() => {
       const response = await request(app).post('/profile').send({
-        firstName: profile.firstName, 
-        lastName: profile.lastName, 
+        firstName: profile.firstName,
+        lastName: profile.lastName,
         email: profile.email
       })
       expect(response.statusCode).toBe(expected.statusCode)
