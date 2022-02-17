@@ -25,12 +25,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.2",
+    "axios": "^0.26.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "couchbase": "^3.2.3",
     "express": "^4.17.1",
-    "qs": "^6.10.1",
+    "qs": "^6.10.3",
     "swagger-ui-express": "^4.1.6",
     "uuid": "^8.3.2",
     "yamljs": "^0.3.0"
