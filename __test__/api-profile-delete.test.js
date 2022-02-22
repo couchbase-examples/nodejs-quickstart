@@ -1,17 +1,21 @@
 import {
   request, describe, test, expect, //supertes
   bcrypt, v4,                      // utilities
-  cluster, profileCollection,      // couchbase
+  connectToDatabase,      // couchbase
   app                              // REST application
 } from './imports'
 
-afterAll(async() => cluster.close())
+afterAll(async() => {
+  const { cluster } = await connectToDatabase();
+  await cluster.close()
+})
 
 describe("DELETE /profile/{id}", () => {
   describe("given we pass a pid as request param", () => {
     const id = v4()
 
     beforeEach(async() => {
+      const { profileCollection } = await connectToDatabase();
       const profile = {
         pid: id, firstName: "Joseph", lastName: "Developer",
         email: "joseph.developer@couchbase.com", pass: bcrypt.hashSync('mypassword', 10)

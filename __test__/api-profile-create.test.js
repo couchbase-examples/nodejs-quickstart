@@ -1,11 +1,14 @@
 import {
   request, describe, test, expect, //supertes
   bcrypt, v4,                      // utilities
-  cluster, profileCollection,      // couchbase
+  connectToDatabase,      // couchbase
   app                              // REST application
 } from './imports'
 
-afterAll(async() => cluster.close())
+afterAll(async() => {
+  const { cluster } = await connectToDatabase();
+  await cluster.close()
+})
 
 describe('POST /profile', () => {
 
@@ -20,14 +23,13 @@ describe('POST /profile', () => {
 
     test('should respond with statusCode 200 and return document persisted', async() => {
       const response = await request(app).post('/profile').send(profile)
-      console.log(`response from request ${response}`)
       pid = response.body.pid
       const hashedPass = response.body.pass
 
       delete response.body.pid; delete response.body.pass
 
       expect(response.statusCode).toBe(expected.statusCode)
-      bcrypt.compare(profile.pass, hashedPass, function(err, result) {
+      await bcrypt.compare(profile.pass, hashedPass, function (err, result) {
         expect(result).toBe(true)
       })
       expect(pid.length).toBe(36)
@@ -37,6 +39,7 @@ describe('POST /profile', () => {
     })
 
     afterEach(async() => {
+      const { profileCollection } = await connectToDatabase();
       await profileCollection.remove(pid)
         .then(() => {/*console.log('test profile document deleted', id)*/ })
         .catch((e) => console.log(`test profile remove failed: ${e.message}`))
