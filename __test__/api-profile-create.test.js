@@ -23,14 +23,13 @@ describe('POST /profile', () => {
 
     test('should respond with statusCode 200 and return document persisted', async() => {
       const response = await request(app).post('/profile').send(profile)
-      console.log(`response from request ${response}`)
       pid = response.body.pid
       const hashedPass = response.body.pass
 
       delete response.body.pid; delete response.body.pass
 
       expect(response.statusCode).toBe(expected.statusCode)
-      bcrypt.compare(profile.pass, hashedPass, function(err, result) {
+      await bcrypt.compare(profile.pass, hashedPass, function (err, result) {
         expect(result).toBe(true)
       })
       expect(pid.length).toBe(36)
