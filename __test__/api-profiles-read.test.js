@@ -1,8 +1,8 @@
 import {
   request, describe, test, expect, //supertes
   bcrypt, v4,                      // utilities
-  cluster, profileCollection,      // couchbase
-  app                              // REST application
+  connectToDatabase,      // couchbase
+  app,                              // REST application
 } from './imports'
 
 import { delay } from '../src/delay'
@@ -17,6 +17,7 @@ const profile2 = {
 }
 
 beforeAll(async () => {
+  const { profileCollection } = await connectToDatabase();
   await profileCollection.insert(profile1.pid, profile1)
     .then(() => {/*console.log('test profile document inserted', profile)*/ })
     .catch((e) => console.log(`test profile insert failed: ${e.message}`))
@@ -42,11 +43,13 @@ describe("GET /profiles", () => {
 })
 
 afterAll(async () => {
+  const { cluster, profileCollection } = await connectToDatabase();
   await profileCollection.remove(profile1.pid)
     .then(() => { /*console.log('test profile document deleted', id)*/ })
     .catch((e) => console.log(`test profile remove failed: ${e.message}`))
   await profileCollection.remove(profile2.pid)
     .then(() => { /*console.log('test profile document deleted', id)*/ })
     .catch((e) => console.log(`test profile remove failed: ${e.message}`))
-  cluster.close()
+
+  await cluster.close()
 })

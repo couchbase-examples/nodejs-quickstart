@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import { v4 } from 'uuid'
 import cors from 'cors'
 
-import { couchbase, cluster, profileCollection } from '../db/connection'
+import { connectToDatabase } from '../db/connection'
 
 const app = express()
 
@@ -20,6 +20,7 @@ app.get('/', function (req, res) {
 })
 
 const ensureIndexes = async() => {
+  const { cluster } = await connectToDatabase();
   try {
     const bucketIndex = `CREATE PRIMARY INDEX ON ${process.env.CB_BUCKET}`
     const collectionIndex = `CREATE PRIMARY INDEX ON default:${process.env.CB_BUCKET}._default.profile;`
@@ -36,6 +37,7 @@ const ensureIndexes = async() => {
 }
 
 app.post("/profile", async (req, res) => {
+  const { profileCollection } = await connectToDatabase();
   if (!req.body.email || !req.body.pass) {
     return res.status(400).send({ "message": `${!req.body.email ? 'email ' : ''}${
       (!req.body.email && !req.body.pass) 
@@ -54,6 +56,7 @@ app.post("/profile", async (req, res) => {
 })
 
 app.get("/profile/:pid", async (req, res) => {
+  const { profileCollection } = await connectToDatabase();
   try {
     await profileCollection.get(req.params.pid)
       .then((result) => res.send(result.value))
@@ -66,6 +69,7 @@ app.get("/profile/:pid", async (req, res) => {
 })
 
 app.put("/profile/:pid", async (req, res) => {
+  const { profileCollection } = await connectToDatabase();
   try {
     await profileCollection.get(req.params.pid)
       .then(async (result) => {
@@ -92,6 +96,7 @@ app.put("/profile/:pid", async (req, res) => {
 })
 
 app.delete("/profile/:pid", async (req, res) => {
+  const { profileCollection } = await connectToDatabase();
   try {
     await profileCollection.remove(req.params.pid)
       .then((result) => res.send(result.value))
@@ -104,6 +109,7 @@ app.delete("/profile/:pid", async (req, res) => {
 })
 
 app.get("/profiles", async (req, res) => {
+  const { cluster } = await connectToDatabase();
   try {
     const options = {
       parameters: {

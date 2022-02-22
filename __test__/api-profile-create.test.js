@@ -1,11 +1,14 @@
 import {
   request, describe, test, expect, //supertes
   bcrypt, v4,                      // utilities
-  cluster, profileCollection,      // couchbase
+  connectToDatabase,      // couchbase
   app                              // REST application
 } from './imports'
 
-afterAll(async() => cluster.close())
+afterAll(async() => {
+  const { cluster } = await connectToDatabase();
+  await cluster.close()
+})
 
 describe('POST /profile', () => {
 
@@ -37,6 +40,7 @@ describe('POST /profile', () => {
     })
 
     afterEach(async() => {
+      const { profileCollection } = await connectToDatabase();
       await profileCollection.remove(pid)
         .then(() => {/*console.log('test profile document deleted', id)*/ })
         .catch((e) => console.log(`test profile remove failed: ${e.message}`))
