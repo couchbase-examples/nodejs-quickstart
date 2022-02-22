@@ -34,6 +34,8 @@ At this point our application is ready and we can simply run:
 npm start
 ```
 
+**_NOTE:_** The connection is handled by the `db/connection.js` file. This connection is automatically cached so subsequent calls won't spawn excess connections. The `connnectToDatabase()` function must be called to obtain a reference to the cluster, bucket, collection (default), or profileCollection. You'll notice in this example that the function is called by each route's handler function. This is merely an implementation detail and can be customized to fit your needs and application.
+
 ## Running The Tests
 
 The first two commands are only required to be run once before running the integration tests to ensure the database is set up in the right configuration:
