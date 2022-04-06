@@ -26,6 +26,7 @@ We've included a `dev.env` file with some basic default values, but you may need
 - `CB_BUCKET` - The bucket to connect to. We'll use `user_profile` for this
 - `IS_CAPELLA` - `true` if you are using Capella, `false` otherwise
 
+**NOTE on TLS:** The connection logic in this sample app ignores mismatched certificates with the parameter `tls_verify=none`. While this is super helpful in streamlining the connection process for development purposes, it's not very secure and should **not** be used in production. To learn how to secure your connection with proper certificates, see [the Node.js TLS connection tutorial](https://developer.couchbase.com/tutorial-nodejs-tls-connection).
 
 ## Setup and Run The Application
 
