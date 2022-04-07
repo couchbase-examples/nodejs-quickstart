@@ -1,9 +1,14 @@
 import express from 'express'
 import bcrypt from 'bcryptjs'
-import { v4 } from 'uuid'
+import {v4} from 'uuid'
 import cors from 'cors'
+import swaggerUi from 'swagger-ui-express'
+import YAML from 'yamljs'
+import * as couchbase from 'couchbase'
 
 import { connectToDatabase } from '../db/connection'
+
+const swaggerDocument = YAML.load('./swagger.yaml')
 
 const app = express()
 
@@ -11,9 +16,6 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-import swaggerUi from 'swagger-ui-express'
-import YAML from 'yamljs'
-const swaggerDocument = YAML.load('./swagger.yaml')
 app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.get('/', function (req, res) {
   res.send('<body onload="window.location = \'/swagger-ui/\'"><a href="/swagger-ui/">Click here to see the API</a>')
@@ -21,17 +23,31 @@ app.get('/', function (req, res) {
 
 const ensureIndexes = async() => {
   const { cluster } = await connectToDatabase();
+  
+  const bucketIndex = `CREATE PRIMARY INDEX ON ${process.env.CB_BUCKET}`
+  const collectionIndex = `CREATE PRIMARY INDEX ON default:${process.env.CB_BUCKET}._default.profile;`
+
   try {
-    const bucketIndex = `CREATE PRIMARY INDEX ON ${process.env.CB_BUCKET}`
-    const collectionIndex = `CREATE PRIMARY INDEX ON default:${process.env.CB_BUCKET}._default.profile;`
     await cluster.query(bucketIndex)
-    await cluster.query(collectionIndex)
-    console.log(`Index Creation: SUCCESS`)
+    console.log(`Bucket Index Creation: SUCCESS`)
   } catch (err) {
     if (err instanceof couchbase.IndexExistsError) {
-      console.info('Index Creation: Indexes Already Exists')
+      console.info('Bucket Index Creation: Index Already Exists')
     } else {
       console.error(err)
+    }
+  }
+  
+  try {
+    await cluster.query(collectionIndex)
+    console.log(`Collection Index Creation: SUCCESS`)
+  } catch (err) {
+    if (err instanceof couchbase.IndexExistsError) {
+      console.info('Collection Index Creation: Index Already Exists')
+    } else if (err instanceof couchbase.PlanningFailureError) {
+      console.info('Collection Index Creation: Profile Collection Not Found. Ensure collection \`profile\` exists.')
+    } else {
+      console.log(err);
     }
   }
 }

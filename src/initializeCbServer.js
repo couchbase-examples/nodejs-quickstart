@@ -18,6 +18,9 @@ const restCreateBucket = async() => {
   .catch((error) => {
     if (error.response === undefined) {
       console.error("Error Creating Bucket:", error.code);
+      if (error.code === 'ECONNREFUSED') {
+        console.info("\tIf you are using a Capella cluster, you'll have to create a \`user_profile`\ bucket manually. See README for details.\n")
+      }
     } else if (error.response.data.errors && error.response.data.errors.name) {
       console.error("Error Creating Bucket:", error.response.data.errors.name, "\n");
     } else if (error.response.data.errors && error.response.data.errors.ramQuota) {
@@ -43,6 +46,9 @@ const restCreateCollection = async() => {
   .catch((error) => {
     if (error.response === undefined) {
       console.error("Error Creating Collection:", error.code);
+      if (error.code === 'ECONNREFUSED') {
+        console.info("\tIf you are using a Capella cluster, you'll have to create a \`profile`\ scope on the \`user_profile\` bucket manually. See README for details.\n")
+      }
     } else if (error.response.status === 404) {
       console.error(`Error Creating Collection: bucket \'${COUCHBASE_BUCKET}\' not found. \n`)
     } else {
