@@ -29,7 +29,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "couchbase": "^4.0.0",
-    "express": "^4.17.3",
+    "express": "^4.18.0",
     "qs": "^6.10.3",
     "swagger-ui-express": "^4.3.0",
     "uuid": "^8.3.2",
