@@ -73,7 +73,12 @@ jobs:
        SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
     services:
       couchbase:
-        image: couchbase:latest
+        image: public.ecr.aws/z2f7n8a1/couchbase-da-containers:couchbase-neo 
+        options: >-
+          --health-cmd "wget -q -O - localhost:8091"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
         ports:
           - 8091:8091
           - 8092:8092
