@@ -42,7 +42,7 @@
     "@babel/plugin-transform-runtime": "^7.17.12",
     "@babel/preset-env": "^7.16.11",
     "env-cmd": "^10.1.0",
-    "jest": "^28.0.3",
+    "jest": "^28.1.0",
     "nodemon": "^2.0.15",
     "supertest": "^6.2.3",
     "set-value": ">=4.0.1"
