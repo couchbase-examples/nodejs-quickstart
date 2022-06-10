@@ -30,14 +30,14 @@
     "cors": "^2.8.5",
     "couchbase": "^4.1.0",
     "express": "^4.18.1",
-    "qs": "^6.10.3",
+    "qs": "^6.10.5",
     "swagger-ui-express": "^4.4.0",
     "uuid": "^8.3.2",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.17.12",
+    "@babel/core": "^7.18.2",
     "@babel/node": "^7.17.10",
     "@babel/plugin-transform-runtime": "^7.17.12",
     "@babel/preset-env": "^7.17.12",
