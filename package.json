@@ -28,7 +28,7 @@
     "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "couchbase": "3.2.4
+    "couchbase": "3.2.4",
     "express": "^4.18.1",
     "qs": "^6.11.0",
     "swagger-ui-express": "^4.4.0",
@@ -36,14 +36,14 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.10",
+    "@babel/cli": "^7.21.0",
     "@babel/core": "^7.18.2",
     "@babel/node": "^7.17.10",
     "@babel/plugin-transform-runtime": "^7.18.10",
     "@babel/preset-env": "^7.19.0",
     "env-cmd": "^10.1.0",
     "jest": "^28.1.0",
-    "nodemon": "^2.0.16",
+    "nodemon": "^2.0.21",
     "supertest": "^6.2.3",
     "set-value": ">=4.0.1"
   }
