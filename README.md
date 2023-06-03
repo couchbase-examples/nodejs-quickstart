@@ -2,7 +2,7 @@
 
 [![Try it now!](https://da-demo-images.s3.amazonaws.com/runItNow_outline.png?couchbase-example=nodejs-quickstart-repo&source=github)](https://gitpod.io/#https://github.com/couchbase-examples/nodejs-quickstart)
 
-This is a companion repository for: "[Quickstart in Couchbase with Node JS and Express](https://developer.couchbase.com/tutorial-quickstart-nodejs/)" at [developer.couchbase.com](https://developer.couchbase.com), which aims to get you up and running with Couchbase and the [NodeJS SDK](https://docs.couchbase.com/nodejs-sdk/current/hello-world/start-using-sdk.html). Connect to a Couchbase cluster, create, read, update, and delete documents, and learn how to write simple parameterized N1QL queries.
+This is a companion repository for: "[Quickstart in Couchbase with Node JS and Express](https://developer.couchbase.com/tutorial-quickstart-nodejs/)" at [developer.couchbase.com](https://developer.couchbase.com), which aims to get you up and running with Couchbase and the [NodeJS SDK](https://docs.couchbase.com/nodejs-sdk/current/hello-world/start-using-sdk.html). Connect to a Couchbase cluster, create, read, update, and delete documents, and learn how to write simple parameterized SQL++ queries.
 
 We will be using the latest version of Couchbase (version 7) that enables scopes and collections. For the easiest setup experience, we recommend trying Couchbase Capella, our fully-managed DBaaS offering. [Claim your free trial!](https://cloud.couchbase.com/sign-up)
 
