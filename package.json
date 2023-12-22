@@ -6,7 +6,7 @@
   "scripts": {
     "init-test-db": "env-cmd -f ./config/test.env npx babel-node ./src/initializeCbServer.js",
     "init-test-index": "env-cmd -f ./config/test.env npx babel-node ./src/createIndex.js",
-    "test": "env-cmd -f ./config/test.env jest --verbose",
+    "test": "env-cmd -f ./config/test.env jest --verbose --runInBand",
     "test:ci": "npm run init-test-db && npm run init-test-index && env-cmd -f ./config/test.env jest --verbose",
     "init-db": "env-cmd -f ./config/dev.env npx babel-node ./src/initializeCbServer.js",
     "start": "env-cmd -f ./config/dev.env nodemon --exec babel-node src/server",
@@ -28,7 +28,7 @@
     "axios": "^1.3.4",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "couchbase": "4.2.2",
+    "couchbase": "4.2.8",
     "express": "^4.18.2",
     "qs": "^6.11.1",
     "swagger-ui-express": "^4.6.2",
