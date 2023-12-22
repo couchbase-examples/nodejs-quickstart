@@ -6,8 +6,6 @@ const DB_CONN_STR = process.env.DB_CONN_STR
 const DB_BUCKET_NAME = process.env.DB_BUCKET_NAME
 const IS_CAPELLA = process.env.IS_CAPELLA
 
-console.log(process.env)
-
 if (!DB_USERNAME) {
   throw new Error(
     'Please define the DB_USERNAME environment variable inside dev.env'
