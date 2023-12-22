@@ -1,0 +1,30 @@
+name: Node JS Tests
+on:
+  push:
+    branches:
+      - quickstart-v2
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DB_CONN_STR: ${{ vars.DB_CONN_STR }}
+      DB_USERNAME: ${{ vars.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_BUCKET_NAME: travel-sample
+      APP_PORT: 3000
+      IS_CAPELLA: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' 
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
