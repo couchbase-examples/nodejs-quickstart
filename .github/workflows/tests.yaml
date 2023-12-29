@@ -2,7 +2,11 @@ name: Node JS Tests
 on:
   push:
     branches:
-      - quickstart-v2
+      - main
+  # pull_request:
+  # workflow_dispatch:
+  # schedule:
+  #   - cron: "0 14 * * *"
 
 jobs:
   test:
@@ -28,3 +32,15 @@ jobs:
 
       - name: Run tests
         run: npm run testGA
+
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@v1
+        with:
+          status: ${{ job.status }}
+          notify_when: "failure,warnings"
+          notification_title: "Repo: *{repo}*"
+          message_format: "{emoji}    *{status_message}* in <{repo_url}|{repo}@{branch}> on <{commit_url}|{commit_sha}>"
+          footer: "<{run_url}|View Full Run on GitHub>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}

@@ -8,31 +8,31 @@ const IS_CAPELLA = process.env.IS_CAPELLA
 
 if (!DB_USERNAME) {
   throw new Error(
-    'Please define the DB_USERNAME environment variable inside dev.env'
+    'Please define the DB_USERNAME environment variable inside dev.env',
   )
 }
 
 if (!DB_PASSWORD) {
   throw new Error(
-    'Please define the DB_PASSWORD environment variable inside dev.env'
+    'Please define the DB_PASSWORD environment variable inside dev.env',
   )
 }
 
 if (!DB_CONN_STR) {
   throw new Error(
-    'Please define the DB_CONN_STR environment variable inside dev.env'
+    'Please define the DB_CONN_STR environment variable inside dev.env',
   )
 }
 
 if (!DB_BUCKET_NAME) {
   throw new Error(
-    'Please define the DB_BUCKET_NAME environment variable inside dev.env'
+    'Please define the DB_BUCKET_NAME environment variable inside dev.env',
   )
 }
 
 if (!IS_CAPELLA) {
   throw new Error(
-    'Please define the IS_CAPELLA environment variable inside dev.env. \nSet to \`true\` if you are connecting to a Capella cluster, and \`false\` otherwise.\n'
+    'Please define the IS_CAPELLA environment variable inside dev.env. \nSet to `true` if you are connecting to a Capella cluster, and `false` otherwise.\n',
   )
 }
 
@@ -60,8 +60,7 @@ async function createCouchbaseCluster() {
       configProfile: 'wanDevelopment',
     })
   } else {
-    // no TLS needed, use traditional connection string
-    cached.conn = await couchbase.connect('couchbase://' + DB_CONN_STR, {
+    cached.conn = await couchbase.connect(DB_CONN_STR, {
       username: DB_USERNAME,
       password: DB_PASSWORD,
     })
@@ -72,11 +71,11 @@ async function createCouchbaseCluster() {
 
 export async function connectToDatabase() {
   const cluster = await createCouchbaseCluster()
-  const bucket = cluster.bucket(DB_BUCKET_NAME);
-  const scope = bucket.scope('inventory');
-  const airlineCollection = bucket.scope('inventory').collection('airline');
-  const airportCollection = bucket.scope('inventory').collection('airport');
-  const routeCollection = bucket.scope('inventory').collection('route');
+  const bucket = cluster.bucket(DB_BUCKET_NAME)
+  const scope = bucket.scope('inventory')
+  const airlineCollection = bucket.scope('inventory').collection('airline')
+  const airportCollection = bucket.scope('inventory').collection('airport')
+  const routeCollection = bucket.scope('inventory').collection('route')
 
   let dbConnection = {
     cluster,
@@ -87,8 +86,5 @@ export async function connectToDatabase() {
     routeCollection,
   }
 
-  return dbConnection;
+  return dbConnection
 }
-
-
-

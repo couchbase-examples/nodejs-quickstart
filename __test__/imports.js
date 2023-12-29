@@ -7,11 +7,13 @@ import { app } from '../src/app'
 
 import { connectToDatabase } from '../db/connection'
 
-
-
 module.exports = {
-  request, describe, test, expect, //supertes
-  bcrypt, v4,                      // utilities
-  connectToDatabase,      // couchbase
-  app                              // REST application
+  request,
+  describe,
+  test,
+  expect, //supertes
+  bcrypt,
+  v4, // utilities
+  connectToDatabase, // couchbase
+  app, // REST application
 }

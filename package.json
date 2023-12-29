@@ -12,6 +12,7 @@
     "init-db": "env-cmd -f ./config/dev.env npx babel-node ./src/initializeCbServer.js",
     "start": "env-cmd -f ./config/dev.env nodemon --exec babel-node src/server",
     "clean": "rm -rf dist",
+    "format": "prettier --write \"**/*.js\"",
     "build": "npm run clean && babel ./src --out-dir dist --copy-files"
   },
   "jest": {
@@ -45,7 +46,8 @@
     "env-cmd": "^10.1.0",
     "jest": "^29.5.0",
     "nodemon": "^2.0.22",
-    "supertest": "^6.3.3",
-    "set-value": ">=4.1.0"
+    "prettier": "^3.1.1",
+    "set-value": ">=4.1.0",
+    "supertest": "^6.3.3"
   }
 }

@@ -1,55 +1,59 @@
-import { AirlineModel } from "../models/airlineModel"
+import { validateRequiredFields } from '../shared/validateRequiredField'
 import { connectToDatabase } from '../../db/connection'
-import { makeResponse } from "../shared/makeResponse";
+import { makeResponse } from '../shared/makeResponse'
 
 const createAirline = async (req, res) => {
-    const { airlineCollection } = await connectToDatabase();
-    await makeResponse(res, async () => {
-        await airlineCollection.insert(req.params.id, req.body)
-        res.status(201);
-        return req.body;
-    });
-};
-
+  const requiredFields = ['name', 'icao', 'country', 'callsign']
+  if (!validateRequiredFields(req, res, requiredFields)) {
+    return
+  }
+  const { airlineCollection } = await connectToDatabase()
+  await makeResponse(res, async () => {
+    await airlineCollection.insert(req.params.id, req.body)
+    res.status(201)
+    return req.body
+  })
+}
 
 const getAirline = async (req, res) => {
-    console.log('before')
-    const { airlineCollection } = await connectToDatabase();
-    console.log('after')
-    await makeResponse(res, async () => {
-        let getResult = await airlineCollection.get(req.params.id)
-        return getResult["content"];
-    });
-};
+  const { airlineCollection } = await connectToDatabase()
+  await makeResponse(res, async () => {
+    let getResult = await airlineCollection.get(req.params.id)
+    return getResult['content']
+  })
+}
 
 const updateAirline = async (req, res) => {
-    const { airlineCollection } = await connectToDatabase();
-    await makeResponse(res, async () => {
-        await airlineCollection.upsert(req.params.id, req.body)
-        return req.body;
-    });
-};
+  const requiredFields = ['name', 'icao', 'country', 'callsign']
+  if (!validateRequiredFields(req, res, requiredFields)) {
+    return
+  }
+  const { airlineCollection } = await connectToDatabase()
+  await makeResponse(res, async () => {
+    await airlineCollection.upsert(req.params.id, req.body)
+    return req.body
+  })
+}
 
 const deleteAirline = async (req, res) => {
-    const { airlineCollection } = await connectToDatabase();
-    await makeResponse(res, async () => {
-        await airlineCollection.remove(req.params.id)
-        res.status(204);
-        return req.body;
-    });
-};
-
+  const { airlineCollection } = await connectToDatabase()
+  await makeResponse(res, async () => {
+    await airlineCollection.remove(req.params.id)
+    res.status(204)
+    return req.body
+  })
+}
 
 const listAirlines = async (req, res) => {
-    const { scope } = await connectToDatabase();
-    // Fetching parameters
-    const country = req.query.country || '';
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const offset = parseInt(req.query.offset, 10) || 0;
-    let query;
-    let options;
-    if (country !== '') {
-        query = `
+  const { scope } = await connectToDatabase()
+  // Fetching parameters
+  const country = req.query.country || ''
+  const limit = parseInt(req.query.limit, 10) || 10
+  const offset = parseInt(req.query.offset, 10) || 0
+  let query
+  let options
+  if (country !== '') {
+    query = `
         SELECT airline.callsign,
                airline.country,
                airline.iata,
@@ -60,10 +64,10 @@ const listAirlines = async (req, res) => {
         ORDER BY airline.name
         LIMIT $LIMIT
         OFFSET $OFFSET;
-      `;
-        options = { parameters: { COUNTRY: country, LIMIT: limit, OFFSET: offset } }
-    } else {
-        query = `
+      `
+    options = { parameters: { COUNTRY: country, LIMIT: limit, OFFSET: offset } }
+  } else {
+    query = `
         SELECT airline.callsign,
                airline.country,
                airline.iata,
@@ -73,25 +77,25 @@ const listAirlines = async (req, res) => {
         ORDER BY airline.name
         LIMIT $LIMIT
         OFFSET $OFFSET;
-      `;
+      `
 
-        options = { parameters: { LIMIT: limit, OFFSET: offset } }
-    }
-    await makeResponse(res, async () => {
-        let results = await scope.query(query, options);
-        return results["rows"]
-    });
+    options = { parameters: { LIMIT: limit, OFFSET: offset } }
+  }
+  await makeResponse(res, async () => {
+    let results = await scope.query(query, options)
+    return results['rows']
+  })
 }
 
 const listAirlinesToAirport = async (req, res) => {
-    const { scope } = await connectToDatabase();
-    // Fetching parameters
-    const airport = req.query.airport;
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const offset = parseInt(req.query.offset, 10) || 0;
-    let query;
-    let options;
-    query = `
+  const { scope } = await connectToDatabase()
+  // Fetching parameters
+  const airport = req.query.airport
+  const limit = parseInt(req.query.limit, 10) || 10
+  const offset = parseInt(req.query.offset, 10) || 0
+  let query
+  let options
+  query = `
 		SELECT air.callsign,
 			air.country,
 			air.iata,
@@ -107,20 +111,19 @@ const listAirlinesToAirport = async (req, res) => {
 		ORDER BY air.name
 		LIMIT $LIMIT
 		OFFSET $OFFSET;
-      `;
-    options = { parameters: { AIRPORT: airport, LIMIT: limit, OFFSET: offset } }
-    await makeResponse(res, async () => {
-        let results = await scope.query(query, options);
-        return results["rows"]
-    });
+      `
+  options = { parameters: { AIRPORT: airport, LIMIT: limit, OFFSET: offset } }
+  await makeResponse(res, async () => {
+    let results = await scope.query(query, options)
+    return results['rows']
+  })
 }
 
 export {
-    createAirline,
-    getAirline,
-    updateAirline,
-    deleteAirline,
-    listAirlines,
-    listAirlinesToAirport,
-};
-
+  createAirline,
+  getAirline,
+  updateAirline,
+  deleteAirline,
+  listAirlines,
+  listAirlinesToAirport,
+}
