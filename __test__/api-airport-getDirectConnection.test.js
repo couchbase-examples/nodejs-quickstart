@@ -59,7 +59,6 @@ describe('GET /api/v1/airport/routes', () => {
           offset: 0,
         })
       expect(response.statusCode).toBe(200)
-      // Add more assertions based on your specific requirements
     })
 
     afterEach(async () => {

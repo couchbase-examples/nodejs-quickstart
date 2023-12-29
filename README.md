@@ -129,6 +129,6 @@ For this quickstart, we use three collections, `airport`, `airline` and `routes`
 
 If you are running this quickstart with a self managed Couchbase cluster, you need to [load](https://docs.couchbase.com/server/current/manage/manage-settings/install-sample-buckets.html) the travel-sample data bucket in your cluster and generate the credentials for the bucket by [creating a user](https://docs.couchbase.com/server/current/manage/manage-security/manage-users-and-roles.html#add-a-user).
 
-You need to update the connection string and the credentials in the `.env` file in the source folder.
+You need to update the connection string and the credentials in the `dev.env` file in the `config` folder.
 
 > Note: Couchbase Server must be installed and running prior to running this app.
