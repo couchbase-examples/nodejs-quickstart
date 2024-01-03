@@ -40,7 +40,6 @@ describe('POST /api/v1/airport/{id}', () => {
 
     afterEach(async () => {
       const { airportCollection } = await connectToDatabase()
-      console.log(id)
       await airportCollection
         .remove(id)
         .then(() => {

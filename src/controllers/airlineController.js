@@ -40,7 +40,7 @@ const deleteAirline = async (req, res) => {
   await makeResponse(res, async () => {
     await airlineCollection.remove(req.params.id)
     res.status(204)
-    return req.body
+    return
   })
 }
 
