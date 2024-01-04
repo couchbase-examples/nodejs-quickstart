@@ -2,11 +2,11 @@ name: Node JS Tests
 on:
   push:
     branches:
-      - main
-  # pull_request:
-  # workflow_dispatch:
-  # schedule:
-  #   - cron: "0 14 * * *"
+      - master
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 14 * * *"
 
 jobs:
   test:
