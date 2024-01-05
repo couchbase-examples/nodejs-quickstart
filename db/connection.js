@@ -4,7 +4,6 @@ const DB_USERNAME = process.env.DB_USERNAME
 const DB_PASSWORD = process.env.DB_PASSWORD
 const DB_CONN_STR = process.env.DB_CONN_STR
 const DB_BUCKET_NAME = process.env.DB_BUCKET_NAME
-const IS_CAPELLA = process.env.IS_CAPELLA
 
 if (!DB_USERNAME) {
   throw new Error(
@@ -30,12 +29,6 @@ if (!DB_BUCKET_NAME) {
   )
 }
 
-if (!IS_CAPELLA) {
-  throw new Error(
-    'Please define the IS_CAPELLA environment variable inside dev.env. \nSet to `true` if you are connecting to a Capella cluster, and `false` otherwise.\n',
-  )
-}
-
 /**
  * Global is used here to maintain a cached connection across hot reloads
  * in development. This prevents connections growing exponentially
@@ -52,19 +45,12 @@ async function createCouchbaseCluster() {
     return cached.conn
   }
 
-  if (IS_CAPELLA === 'true') {
-    // Use wan profile to avoid latency issues
-    cached.conn = await couchbase.connect(DB_CONN_STR, {
-      username: DB_USERNAME,
-      password: DB_PASSWORD,
-      configProfile: 'wanDevelopment',
-    })
-  } else {
-    cached.conn = await couchbase.connect(DB_CONN_STR, {
-      username: DB_USERNAME,
-      password: DB_PASSWORD,
-    })
-  }
+  // Use wan profile to avoid latency issues
+  cached.conn = await couchbase.connect(DB_CONN_STR, {
+    username: DB_USERNAME,
+    password: DB_PASSWORD,
+    configProfile: 'wanDevelopment',
+  })
 
   return cached.conn
 }

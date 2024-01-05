@@ -17,7 +17,6 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_BUCKET_NAME: travel-sample
       APP_PORT: 3000
-      IS_CAPELLA: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

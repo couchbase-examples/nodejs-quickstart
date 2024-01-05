@@ -2,7 +2,7 @@ import {
   request,
   describe,
   test,
-  expect, //supertes
+  expect, // supertest
   connectToDatabase, // couchbase
   app, // REST application
 } from './imports'
@@ -18,7 +18,7 @@ describe('GET /api/v1/airport/list', () => {
     const airport1 = {
       airportName: 'Initial Test Name',
       city: 'Initial Test City',
-      country: 'Initial Test Country',
+      country: 'Test Country',
       id: '777',
       faa: 'TESTFAA',
     }
@@ -26,7 +26,7 @@ describe('GET /api/v1/airport/list', () => {
     const airport2 = {
       airportName: 'Updated Test Name',
       city: 'Updated Test City',
-      country: 'Updated Test Country',
+      country: 'Test Country',
       id: '777',
       faa: 'TESTFAA',
     }
@@ -53,7 +53,18 @@ describe('GET /api/v1/airport/list', () => {
         country: 'Test Country',
       })
       expect(response.statusCode).toBe(200)
-      // expect(response.body.items).toHaveLength(2)
+
+      expect(response.body).toContainEqual(expect.objectContaining({
+        city: airport1.city,
+        country: airport1.country,
+        faa: airport1.faa,
+      }));
+    
+      expect(response.body).toContainEqual(expect.objectContaining({
+        city: airport2.city,
+        country: airport2.country,
+        faa: airport2.faa,
+      }));
     })
 
     afterEach(async () => {

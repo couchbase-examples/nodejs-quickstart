@@ -2,7 +2,7 @@ import {
   request,
   describe,
   test,
-  expect, //supertes
+  expect, // supertest
   connectToDatabase, // couchbase
   app, // REST application
 } from './imports'

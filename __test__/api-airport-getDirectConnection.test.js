@@ -2,9 +2,9 @@ import {
   request,
   describe,
   test,
-  expect,
-  connectToDatabase,
-  app,
+  expect, // supertest
+  connectToDatabase, // couchbase
+  app, // REST application
 } from './imports'
 
 afterAll(async () => {
@@ -59,6 +59,7 @@ describe('GET /api/v1/airport/routes', () => {
           offset: 0,
         })
       expect(response.statusCode).toBe(200)
+      expect(response.body).toHaveLength(5)
     })
 
     afterEach(async () => {
