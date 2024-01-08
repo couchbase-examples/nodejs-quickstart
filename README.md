@@ -19,7 +19,7 @@ To run this prebuilt project, you will need:
 
 - [Couchbase Capella](https://www.couchbase.com/products/capella/) cluster with [travel-sample](https://docs.couchbase.com/python-sdk/current/ref/travel-app-data-model.html) bucket loaded.
   - To run this tutorial using a self managed Couchbase cluster, please refer to the [appendix](#running-self-managed-couchbase-cluster).
-- [Node js v16+](https://nodejs.org/en/download) installed on local machine.
+- [LTS Node.js Version](https://nodejs.org/en/download) installed on local machine.
 - Basic knowledge of [JavaScript](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics), [Node JS](https://nodejs.org/en/learn/getting-started/introduction-to-nodejs) and [Express](https://expressjs.com/)
 - Loading Travel Sample Bucket
   If travel-sample is not loaded in your Capella cluster, you can load it by following the instructions for your Capella Cluster:
