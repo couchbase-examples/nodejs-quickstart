@@ -1,283 +1,628 @@
-openapi: 3.0.0
+definitions:
+  models.Airline:
+    properties:
+      callsign:
+        example: SAF
+        type: string
+      country:
+        example: United States
+        type: string
+      iata:
+        example: SA
+        type: string
+      icao:
+        example: SAF
+        type: string
+      name:
+        example: SampleName
+        type: string
+    required:
+    - country
+    - icao
+    - name
+    type: object
+  models.Airport:
+    properties:
+      airportname:
+        example: SampleAirport
+        type: string
+      city:
+        example: SampleCity
+        type: string
+      country:
+        example: United Kingdom
+        type: string
+      faa:
+        example: SAA
+        type: string
+      geo:
+        $ref: '#/definitions/models.Geo'
+      icao:
+        example: SAAA
+        type: string
+      tz:
+        example: Europe/Paris
+        type: string
+    required:
+    - airportname
+    - city
+    - country
+    - faa
+    type: object
+  models.Destination:
+    properties:
+      destinationairport:
+        example: JFK
+        type: string
+    type: object
+  models.Geo:
+    properties:
+      alt:
+        example: 48.864716
+        type: number
+      lat:
+        example: 2.349014
+        type: number
+      lon:
+        example: 92
+        type: number
+    type: object
+  models.Route:
+    properties:
+      airline:
+        example: AF
+        type: string
+      airlineid:
+        example: airline_10
+        type: string
+      destinationairport:
+        example: JFK
+        type: string
+      distance:
+        example: 4151.79
+        type: number
+      equipment:
+        example: CRJ
+        type: string
+      schedule:
+        items:
+          $ref: '#/definitions/models.Schedule'
+        type: array
+      sourceairport:
+        example: SFO
+        type: string
+      stops:
+        example: 0
+        type: integer
+    required:
+    - airline
+    - airlineid
+    - destinationairport
+    - sourceairport
+    type: object
+  models.Schedule:
+    properties:
+      day:
+        example: 1
+        type: integer
+      flight:
+        example: XYZ123
+        type: string
+      utc:
+        example: "14:30"
+        type: string
+    type: object
 info:
-  title: Profile Store API
-  description: Simple Profile Store API built with NodeJS, Express, Babel, and Couchbase
-  version: 0.1.0
-tags:
-  - name: profile
-    description: KV operations for a singular User Profile
-  - name: profiles
-    description: Query for searching User Profiles
+  contact: {}
+  description: |2-
+
+    This API provides operations for multiple collections in the database, including CRUD operations and query examples.
+    We have a visual representation of the API documentation using Swagger, which allows you to interact with the API's endpoints directly through the browser. It provides a clear view of the API, including endpoints, HTTP methods, request parameters, and response objects.
+    Click on an individual endpoint to expand it and see detailed information. This includes the endpoint's description, possible response status codes, and the request parameters it accepts.
+    Trying Out the API
+    You can try out an API by clicking on the "Try it out" button next to the endpoints.
+    - Parameters: If an endpoint requires parameters, Swagger UI provides input boxes for you to fill in. This could include path parameters, query strings, headers, or the body of a POST/PUT request.
+    - Execution: Once you've inputted all the necessary parameters, you can click the "Execute" button to make a live API call. Swagger UI will send the request to the API and display the response directly in the documentation. This includes the response code, response headers, and response body.
+    Models
+    <div style="float: left;">Swagger documents the structure of request and response bodies using models. These models define the expected data structure using JSON schema and are extremely helpful in understanding what data to send and expect.
+    For details on the API, please check the tutorial on the Couchbase Developer Portal: https://developer.couchbase.com/tutorial-quickstart-nodejs
+  title:  Quickstart using Couchbase with Node JS and Express
+  version: "1.0"
 paths:
-  /profile:
-    post:
-      tags:
-        - profile
-      summary: Post a User Profile
-      description: Post a User Profile
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/ProfileRequest'
-      responses:
-        '200':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProfileCreatedResponse'
-        '500':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PutProfileBadResponse'
-  /profile/{pid}:
-    get:
-      tags:
-        - profile
-      summary: Returns a single User Profile
-      description: The R (singluar) in CRUD
-      parameters:
-        - name: pid
-          in: path
-          description: ID of User Profile to return
-          required: true
-          schema:
-            type:  string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProfileBasic'
-        '500':
-          description: KV Operation Failed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetProfileDocumentNotFound'
-    put:
-      tags:
-        - profile
-      summary: Update a user Profile
-      description: The U in CRUD
-      parameters:
-        - name: pid
-          in: path
-          required: true
-          description: Profile ID
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/ProfileRequest'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProfileUpdateResponse'
-        '500':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PutProfileDocumentNotFound'
+  /api/v1/airline/{id}:
     delete:
-      tags:
-        - profile
-      summary: Delete Profile
-      description: Delete a single User Profile
+      description: 'Delete Airline with specified ID<br><br>This provides an example
+        of using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to delete a document with specified ID.<br><br>Key Value operations
+        are unique to Couchbase and provide very high speed get/set/delete operations<br><br>Code:
+        [`controllers/airlineController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airlineController.js)<br><br>Method: `deleteAirline`'
       parameters:
-        - name: pid
-          in: path
-          required: true
-          description: Profile ID
-          schema:
-            type : string
+      - description: Airline ID like airline_10
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
       responses:
-        '200':
-          description: OK
-        '500':
-          description: Delete Failed
-          content:
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/DeleteProfileDocumentNotFound'
-  /profiles:
+        "204":
+          description: Airline deleted
+        "404":
+          description: Airline Document ID Not Found
+        "500":
+          description: Internal Server Error
+      summary: Delete Document
+      tags:
+      - Airline collection
     get:
-      tags:
-        - profiles
-      summary: Searches profiles by 'firstName'
-      description: The R in CRUD
+      description: 'Get Airline with specified ID<br><br>This provides an example
+        of using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to get a document with specified ID.<br><br>Key Value operations
+        are unique to Couchbase and provide very high speed get/set/delete operations<br><br>Code:
+        [`controllers/airlineController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airlineController.js)<br><br>Method: `getAirline`'
       parameters:
-        - in: query
-          name: skip
-          schema:
-            type: integer
-          description: The numbers of items to offset
-          example: 0
-        - in: query
-          name: limit
-          schema:
-            type: integer
-          description: The numbers of items to return
-          example: 1
-        - in: query
-          name: search
-          schema:
-            type: string
-          description: The text to search first and last name
-          example: jo
+      - description: Airline ID like airline_10
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
       responses:
-        '200':
+        "200":
           description: OK
-          content:
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/ArrayOfProfiles'
-        '500':
+          schema:
+            $ref: '#/definitions/models.Airline'
+        "404":
+          description: Airline Document ID not found
+        "500":
+          description: Internal Server Error
+      summary: Get Airline Document
+      tags:
+      - Airline collection
+    post:
+      description: 'Create Airline with specified ID<br><br>This provides an example
+        of using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to create a new document with a specified ID<br><br>Key Value
+        operations are unique to Couchbase and provide very high speed get/set/delete
+        operations<br><br>Code: [`controllers/airlineController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airlineController.js)<br><br>Method:
+        `createAirline`'
+      parameters:
+      - description: Airline ID like airline_10
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Data to create a new document
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.Airline'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Airline'
+        "400":
+          description: Bad Request
+        "409":
+          description: Airline document already exists
+        "500":
+          description: Internal Server Error
+      summary: Insert Document
+      tags:
+      - Airline collection
+    put:
+      description: 'Update Airline with specified ID<br><br>This provides an example
+        of using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to upsert a document with specified ID.<br><br>Key Value operations
+        are unique to Couchbase and provide very high speed get/set/delete operations<br><br>Code:
+        [`controllers/airlineController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airlineController.js)<br><br>Method: `updateAirline`'
+      parameters:
+      - description: Airline ID like airline_10
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updates document
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.Airline'
+      produces:
+      - application/json
+      responses:
+        "200":
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetProfilesDocumentNotFound'
-components:
-  schemas:
-    ProfileRequest:
-      required:
-        - email
-        - pass
-      type: object
-      properties:
-        email:
-          type: string
-          example: johndohz@couchbase.com
-        pass:
-          type: string
-          example: p455w3rd
-        firstName:
-          type: string
-          example: John
-        lastName:
-          type: string
-          example: Dohz
-    ProfileBasic:
-      properties: 
-        pid:
-          type: string
-          example: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
-        email:
-          type: string
-          example: 'johndoh@couchbase.com'
-        firstName:
-          type: string
-          example: 'John'
-        lastName:
-          type: string
-          example: 'Dohz'
-        pass:
-          type: string
-          example: '$h45h3d5tr1n6!'
-    ProfileCreatedResponse:
-      properties:
-        pid:
-          type: string
-          example: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
-        email:
-          type: string
-          example: 'johndoh@couchbase.com'
-        pass:
-          type: string
-          example: '$h45h3d5tr1n6!'
-        firstName:
-          type: string
-          example: 'John'
-        lastName:
-          type: string
-          example: 'Dohz'
-        cas:
-          type: string
-          example: '1621568977675026432'
-        token:
-          type: string
-          example: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
-    ProfileUpdateResponse:
-      properties:
-        pid:
-          type: string
-          example: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
-        email:
-          type: string
-          example: 'johndoh@couchbase.com'
-        pass:
-          type: string
-          example: '$h45h3d5tr1n6!'
-        firstName:
-          type: string
-          example: 'John'
-        lastName:
-          type: string
-          example: 'Dohz'
-        cas:
-          type: string
-          example: '1621568977675026432'
-        token:
-          type: string
-          example: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
-    ArrayOfProfiles:
-      type: array
-      items:
-        type: object
-        properties:
-          pid:
-            type: string
-          email:
-            type: string
-          pass:
-            type: string
-            example: 
-          firstName:
-            type: string
-          lastName:
-            type: string
-            example: 
-      example:
-        - pid: '123456eb-1a2b-3c45-defg-67dhi89j0kl1'
-          email: 'johndohz@couchbase.com'
-          pass: '$h45h3d5tr1n6!'
-          firstname: 'John'
-          lastName: 'Dohz'
-    GetProfileDocumentNotFound:
-      properties:
-        message:
-          type: string
-          example: 'KV Operation Failed: document not found'
-    PutProfileBadResponse:
-      properties:
-        message:
-          type: string
-          example: 'email and pass are required'
-    PutProfileDocumentNotFound:
-      properties:
-        message:
-          type: string
-          example: 'Profile Not Found, cannot update: 123456eb-1a2b-3c45-defg-67dhi89j0kl1'
-    DeleteProfileDocumentNotFound:
-      properties:
-        message:
-          type: string
-          example: 'Profile Not Found, cannot update: 123456eb-1a2b-3c45-defg-67dhi89j0kl1'
-    GetProfilesDocumentNotFound:
-      properties:
-        message:
-          type: string
-          example: 'Query Failed: {Error Message}'
+          schema:
+            $ref: '#/definitions/models.Airline'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update Document
+      tags:
+      - Airline collection
+  /api/v1/airline/list:
+    get:
+      description: 'Get list of Airlines. Optionally, you can filter the list by Country<br><br>This
+        provides an example of using [SQL++ query](https://docs.couchbase.com/nodejs-sdk/current/howtos/n1ql-queries-with-sdk.html)
+        in Couchbase to fetch a list of documents matching the specified criteria.<br><br>Code:
+        [`controllers/airlineController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airlineController.js)<br><br>Method: `listAirline`'
+      parameters:
+      - description: 'Filter by country<br>Example: France, United Kingdom, United
+          States'
+        in: query
+        name: country
+        type: string
+      - description: 'Number of airlines to return (page size).<br>Example: 10'
+        in: query
+        name: limit
+        type: integer
+      - description: 'Number of airlines to skip (for pagination).<br>Example: 0'
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Airline'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Get Airlines by Country
+      tags:
+      - Airline collection
+  /api/v1/airline/to-airport:
+    get:
+      description: 'Get Airlines flying to specified destination Airport<br><br>This
+        provides an example of using SQL++ query in Couchbase to fetch a list of documents
+        matching the specified criteria.<br><br>Code: [`controllers/airlineController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airlineController.js)<br><br>Method:
+        `listAirlinesToAirport`'
+      parameters:
+      - description: 'Destination airport<br>Example : SFO, JFK, LAX'
+        in: query
+        name: airport
+        required: true
+        type: string
+      - description: 'Number of airlines to return (page size)<br>Default value :
+          10'
+        in: query
+        name: limit
+        type: integer
+      - description: 'Number of airlines to skip (for pagination)<br>Default value
+          : 0'
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Airline'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Get Airlines Flying to Airport
+      tags:
+      - Airline collection
+  /api/v1/airport/{id}:
+    delete:
+      description: 'Delete Airport with specified ID<br><br>This provides an example
+        of using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to create a new document with a specified ID.<br><br>Key Value
+        operations are unique to Couchbase and provide very high speed get/set/delete
+        operations.<br><br>Code: [`controllers/airlineController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airportController.js)<br><br>Method:
+        `deleteAirport`'
+      parameters:
+      - description: Airport ID like airport_1273
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Airport deleted
+        "404":
+          description: Airport Document ID Not Found
+        "500":
+          description: Internal Server Error
+      summary: Deletes Airport Document
+      tags:
+      - Airport collection
+    get:
+      description: 'Get Airport with specified ID<br><br>This provides an example
+        of using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to create a new document with a specified ID<br><br>Code: [`controllers/airlineController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airportController.js)<br><br>Method:
+        `getAirport`'
+      parameters:
+      - description: Airport ID like airport_1273
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Airport'
+        "404":
+          description: Airport Document ID Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get Airport Document
+      tags:
+      - Airport collection
+    post:
+      description: 'Create Airport with specified ID<br><br>This provides an example
+        of using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to create a new document with a specified ID.<br><br>Key Value
+        operations are unique to Couchbase and provide very high speed get/set/delete
+        operations.<br><br>Key Value operations are unique to Couchbase and provide
+        very high speed get/set/delete operations<br><br>Code: [`controllers/airportController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airportController.js)<br><br>Method:
+        `createAirport`'
+      parameters:
+      - description: Airport ID like airport_1273
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Data to create a document
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.Airport'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Airport'
+        "400":
+          description: Bad Request
+        "409":
+          description: Airport Document already exists
+        "500":
+          description: Internal Server Error
+      summary: Insert Airport Document
+      tags:
+      - Airport collection
+    put:
+      description: 'Update Airport with specified ID<br><br>This provides an example
+        of using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to create a new document with a specified ID.<br><br>Key Value
+        operations are unique to Couchbase and provide very high speed get/set/delete
+        operations.<br><br>Code: [`controllers/airportController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airportController.js)<br><br>Method:
+        `updateAirport`'
+      parameters:
+      - description: Airport ID like airport_1273
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updates document
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.Airport'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Airport'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update Airport Document
+      tags:
+      - Airport collection
+  /api/v1/airport/direct-connections:
+    get:
+      description: 'Get Direct Connections from specified Airport<br><br>This provides
+        an example of using a [SQL++ query](https://docs.couchbase.com/nodejs-sdk/current/howtos/n1ql-queries-with-sdk.html)
+        in Couchbase to fetch a list of documents matching the specified criteria.<br><br>Code:
+        [`controllers/airportController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airportController.js)<br><br>Method: `ListDirectConnection`'
+      parameters:
+      - description: 'Source airport<br>Example: SFO, LHR, CDG'
+        in: query
+        name: airport
+        required: true
+        type: string
+      - description: 'Number of direct connections to return (page size)<br>Default
+          value : 10'
+        in: query
+        name: limit
+        type: integer
+      - description: 'Number of direct connections to skip (for pagination)<br>Default
+          value : 0'
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Destination'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Get Direct Connections from Airport
+      tags:
+      - Airport collection
+  /api/v1/airport/list:
+    get:
+      description: 'Get list of Airports. Optionally, you can filter the list by Country<br><br>This
+        provides an example of using a [SQL++ query](https://docs.couchbase.com/nodejs-sdk/current/howtos/n1ql-queries-with-sdk.html)
+        in Couchbase to fetch a list of documents matching the specified criteria.<br><br>Code:
+        [`controllers/airportController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/airportController.js)<br><br>Method: `listAirport`'
+      parameters:
+      - description: 'Country<br>Example: United Kingdom, France, United States'
+        in: query
+        name: country
+        type: string
+      - description: 'Number of airports to return (page size)<br>Default value :
+          10'
+        in: query
+        name: limit
+        type: integer
+      - description: 'Number of airports to skip (for pagination)<br>Default value
+          : 0'
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Airport'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: List Airport Document
+      tags:
+      - Airport collection
+  /api/v1/route/{id}:
+    delete:
+      description: 'Delete Route with specified ID<br><br>This provides an example
+        of using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to create a new document with a specified ID.<br><br>Key Value
+        operations are unique to Couchbase and provide very high speed get/set/delete
+        operations.<br><br>Code: [`controllers/routeController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/routeController.js)<br><br>Method: `deleteRoute`'
+      parameters:
+      - description: Route ID like route_10000
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Route Deleted
+        "404":
+          description: Route Document ID Not Found
+        "500":
+          description: Internal Server Error
+      summary: Delete Route Document
+      tags:
+      - Route collection
+    get:
+      description: 'Get Route with specified ID<br><br>This provides an example of
+        using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to create a new document with a specified ID.<br><br>Key Value
+        operations are unique to Couchbase and provide very high speed get/set/delete
+        operations.<br><br>Code: [`controllers/routeController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/routeController.js)<br><br>Method: `getRoute`'
+      parameters:
+      - description: Route ID like route_10000
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Route'
+        "404":
+          description: Route Document ID Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get Route Document
+      tags:
+      - Route collection
+    post:
+      description: 'Create Route with specified ID<br><br>This provides an example
+        of using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to create a new document with a specified ID.<br><br>Key Value
+        operations are unique to Couchbase and provide very high speed get/set/delete
+        operations.<br><br>Code: [`controllers/routeController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/routeController.js)<br><br>Method: `createRoute`'
+      parameters:
+      - description: Route ID like route_10000
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Data to create a document
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.Route'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Route'
+        "400":
+          description: Bad Request
+        "409":
+          description: Route Document already exists
+        "500":
+          description: Internal Server Error
+      summary: Insert Route Document
+      tags:
+      - Route collection
+    put:
+      description: 'Update Route with specified ID<br><br>This provides an example
+        of using [Key Value operations](https://docs.couchbase.com/nodejs-sdk/current/howtos/kv-operations.html)
+        in Couchbase to create a new document with a specified ID.<br><br>Key Value
+        operations are unique to Couchbase and provide very high speed get/set/delete
+        operations.<br><br>Code: [`controllers/routeController.js`](https://github.com/couchbase-examples/nodejs-quickstart/blob/master/src/controllers/routeController.js)<br><br>Method: `updateRoute`'
+      parameters:
+      - description: Route ID like route_10000
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updates document
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.Route'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Route'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update Route Document
+      tags:
+      - Route collection
+swagger: "2.0"

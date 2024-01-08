@@ -1,12 +1,10 @@
-import { app, ensureIndexes } from './app.js'
+import { app } from './app.js'
 
-const startApiServer = async() => {
-  await ensureIndexes()
-    .then(() => {
-      app.listen(process.env.APP_PORT, () => {
-        console.log(`API started at http://localhost:${process.env.APP_PORT}`)
-      })
-    })
+const startApiServer = async () => {
+  const port = process.env.APP_PORT
+  app.listen(port, () => {
+    console.log(`API started at http://localhost:${port}`)
+  })
 }
 
 startApiServer()

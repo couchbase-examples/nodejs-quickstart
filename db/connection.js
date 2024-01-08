@@ -1,38 +1,31 @@
 import * as couchbase from 'couchbase'
 
-const CB_USER = process.env.CB_USER
-const CB_PASS = process.env.CB_PASS
-const CB_URL = process.env.CB_URL
-const CB_BUCKET = process.env.CB_BUCKET
-const IS_CAPELLA = process.env.IS_CAPELLA
+const DB_USERNAME = process.env.DB_USERNAME
+const DB_PASSWORD = process.env.DB_PASSWORD
+const DB_CONN_STR = process.env.DB_CONN_STR
+const DB_BUCKET_NAME = process.env.DB_BUCKET_NAME
 
-if (!CB_USER) {
+if (!DB_USERNAME) {
   throw new Error(
-      'Please define the CB_USER environment variable inside dev.env'
+    'Please define the DB_USERNAME environment variable inside dev.env',
   )
 }
 
-if (!CB_PASS) {
+if (!DB_PASSWORD) {
   throw new Error(
-      'Please define the CB_PASS environment variable inside dev.env'
+    'Please define the DB_PASSWORD environment variable inside dev.env',
   )
 }
 
-if (!CB_URL) {
+if (!DB_CONN_STR) {
   throw new Error(
-      'Please define the CB_URL environment variable inside dev.env'
+    'Please define the DB_CONN_STR environment variable inside dev.env',
   )
 }
 
-if (!CB_BUCKET) {
+if (!DB_BUCKET_NAME) {
   throw new Error(
-      'Please define the CB_BUCKET environment variable inside dev.env'
-  )
-}
-
-if (!IS_CAPELLA) {
-  throw new Error(
-      'Please define the IS_CAPELLA environment variable inside dev.env. \nSet to \`true\` if you are connecting to a Capella cluster, and \`false\` otherwise.\n'
+    'Please define the DB_BUCKET_NAME environment variable inside dev.env',
   )
 }
 
@@ -52,38 +45,32 @@ async function createCouchbaseCluster() {
     return cached.conn
   }
 
-  if (IS_CAPELLA === 'true') {
-    // Capella requires TLS connection string but we'll skip certificate verification with `tls_verify=none`
-    cached.conn = await couchbase.connect('couchbases://' + CB_URL + '?tls_verify=none', {
-      username: CB_USER,
-      password: CB_PASS,
-    })
-  } else {
-    // no TLS needed, use traditional connection string
-    cached.conn = await couchbase.connect('couchbase://' + CB_URL, {
-      username: CB_USER,
-      password: CB_PASS,
-    })
-  }
+  // Use wan profile to avoid latency issues
+  cached.conn = await couchbase.connect(DB_CONN_STR, {
+    username: DB_USERNAME,
+    password: DB_PASSWORD,
+    configProfile: 'wanDevelopment',
+  })
 
   return cached.conn
 }
 
 export async function connectToDatabase() {
   const cluster = await createCouchbaseCluster()
-  const bucket = cluster.bucket(CB_BUCKET);
-  const collection = bucket.defaultCollection();
-  const profileCollection = bucket.collection('profile');
+  const bucket = cluster.bucket(DB_BUCKET_NAME)
+  const scope = bucket.scope('inventory')
+  const airlineCollection = bucket.scope('inventory').collection('airline')
+  const airportCollection = bucket.scope('inventory').collection('airport')
+  const routeCollection = bucket.scope('inventory').collection('route')
 
   let dbConnection = {
     cluster,
     bucket,
-    collection,
-    profileCollection,
+    scope,
+    airlineCollection,
+    airportCollection,
+    routeCollection,
   }
 
-  return dbConnection;
+  return dbConnection
 }
-
-
-
