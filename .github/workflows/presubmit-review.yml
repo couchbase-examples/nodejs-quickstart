@@ -20,7 +20,7 @@ jobs:
             echo "Error: LLM_API_KEY secret is not configured"
             exit 1
           fi
-      - uses: VirajAgarwal1/ai-reviewer-forked
+      - uses: VirajAgarwal1/ai-reviewer-forked@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
