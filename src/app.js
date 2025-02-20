@@ -11,25 +11,26 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-//swagger only
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
-const swaggerDocument = YAML.load('./swagger.yaml');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+import swaggerUi from 'swagger-ui-express'
+import YAML from 'yamljs'
+const swaggerDocument = YAML.load('./swagger.yaml')
+app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+app.get('/', function (req, res) {
+  res.send('<body onload="window.location = \'/swagger-ui/\'"><a href="/swagger-ui/">Click here to see the API</a>')
+})
 
-const ensureProfileIndex = async() => {
+const ensureIndexes = async() => {
   try {
-    const query = `
-      CREATE INDEX profile_lower_firstName 
-      ON default:${process.env.CB_BUCKET}._default.profile(lower(\`firstName\`));
-    `
-    const result = await cluster.query(query)
-    console.log(`Index Creation: ${result.meta.status}`)
+    const bucketIndex = `CREATE PRIMARY INDEX ON ${process.env.CB_BUCKET}`
+    const collectionIndex = `CREATE PRIMARY INDEX ON default:${process.env.CB_BUCKET}._default.profile;`
+    await cluster.query(bucketIndex)
+    await cluster.query(collectionIndex)
+    console.log(`Index Creation: SUCCESS`)
   } catch (err) {
     if (err instanceof couchbase.IndexExistsError) {
-      console.info('Index Creation: Index Already Exists');
+      console.info('Index Creation: Indexes Already Exists')
     } else {
-      console.error(err);
+      console.error(err)
     }
   }
 }
@@ -37,11 +38,10 @@ const ensureProfileIndex = async() => {
 app.post("/profile", async (req, res) => {
   if (!req.body.email || !req.body.pass) {
     return res.status(400).send({ "message": `${!req.body.email ? 'email ' : ''}${
-        (!req.body.email && !req.body.pass) 
-          ? 'and pass are required' 
-          : (req.body.email && !req.body.pass) 
-            ? 'pass is required' 
-            : 'is required'}`})
+      (!req.body.email && !req.body.pass) 
+        ? 'and pass are required' : (req.body.email && !req.body.pass) 
+          ? 'pass is required' : 'is required'
+    }`})
   }
 
   const id = v4()
@@ -51,6 +51,18 @@ app.post("/profile", async (req, res) => {
     .catch((e) => res.status(500).send({
       "message": `Profile Insert Failed: ${e.message}`
     }))
+})
+
+app.get("/profile/:pid", async (req, res) => {
+  try {
+    await profileCollection.get(req.params.pid)
+      .then((result) => res.send(result.value))
+      .catch((error) => res.status(500).send({
+        "message": `KV Operation Failed: ${error.message}`
+      }))
+  } catch (error) {
+    console.error(error)
+  }
 })
 
 app.put("/profile/:pid", async (req, res) => {
@@ -84,39 +96,26 @@ app.delete("/profile/:pid", async (req, res) => {
     await profileCollection.remove(req.params.pid)
       .then((result) => res.send(result.value))
       .catch((error) => res.status(500).send({
-        "message": `Delete failed: ${error.message}`
+        "message": `Profile Not Found, cannot delete: ${error.message}`
       }))
   } catch (e) {
     console.error(e)
   }
 })
 
-app.get("/profile/:pid", async (req, res) => {
-  try {
-    await profileCollection.get(req.params.pid)
-      .then((result) => res.send(result.value))
-      .catch((error) => res.status(500).send({
-        "message": `Query failed: ${error.message}`
-      }))
-  } catch (error) {
-    console.error(error)
-  }
-})
-
 app.get("/profiles", async (req, res) => {
-  let firstName = req.query.searchFirstName.toLowerCase()
   try {
     const options = {
       parameters: {
         SKIP: Number(req.query.skip || 0),
         LIMIT: Number(req.query.limit || 5),
-        FNAME: `%${firstName}%`
+        SEARCH: `%${req.query.search.toLowerCase()}%`
       }
     }
     const query = `
       SELECT p.*
       FROM ${process.env.CB_BUCKET}._default.profile p
-      WHERE lower(p.firstName) LIKE $FNAME
+      WHERE lower(p.firstName) LIKE $SEARCH OR lower(p.lastName) LIKE $SEARCH
       LIMIT $LIMIT OFFSET $SKIP;
     `
     await cluster.query(query, options)
@@ -129,4 +128,4 @@ app.get("/profiles", async (req, res) => {
   }
 })
 
-module.exports = { app, ensureProfileIndex }
+module.exports = { app, ensureIndexes }
