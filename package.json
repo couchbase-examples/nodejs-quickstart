@@ -29,7 +29,7 @@
   "dependencies": {
     "@babel/runtime": "^7.27.1",
     "axios": "^1.9.0",
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "couchbase": "4.4.5",
     "express": "^4.21.2",
