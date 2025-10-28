@@ -28,7 +28,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/runtime": "^7.27.1",
-    "axios": "^1.9.0",
+    "axios": "^1.13.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "couchbase": "4.4.5",
