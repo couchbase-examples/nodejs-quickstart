@@ -66,9 +66,17 @@ Specifically, you need to do the following:
 All configuration for communication with the database is read from the environment variables. We have provided a convenience feature in this quickstart to read the environment variables from a local file, `dev.env` in the `config` folder.
 
 ```sh
+cp config/dev.env.example config/dev.env
+```
+
+Then update `config/dev.env` with your cluster details:
+
+```sh
 DB_CONN_STR=<connection_string>
 DB_USERNAME=<user_with_read_write_permission_to_travel-sample_bucket>
 DB_PASSWORD=<password_for_user>
+DB_BUCKET_NAME=travel-sample
+APP_PORT=3000
 ```
 
 > Note: The connection string expects the `couchbases://` or `couchbase://` part.
