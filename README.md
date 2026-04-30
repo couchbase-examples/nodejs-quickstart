@@ -63,13 +63,14 @@ Specifically, you need to do the following:
 - Create the [database credentials](https://docs.couchbase.com/cloud/clusters/manage-database-users.html) to access the travel-sample bucket (Read and Write) used in the application.
 - [Allow access](https://docs.couchbase.com/cloud/clusters/allow-ip-address.html) to the Cluster from the IP on which the application is running.
 
-All configuration for communication with the database is read from the environment variables. We have provided a convenience feature in this quickstart to read the environment variables from a local file, `dev.env` in the `config` folder.
+All configuration for communication with the database is read from the environment variables. We have provided convenience env templates in the `config` folder for both local app runs and the Jest suite.
 
 ```sh
 cp config/dev.env.example config/dev.env
+cp config/test.env.example config/test.env
 ```
 
-Then update `config/dev.env` with your cluster details:
+Then update `config/dev.env` and `config/test.env` with your cluster details:
 
 ```sh
 DB_CONN_STR=<connection_string>
