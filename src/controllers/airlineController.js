@@ -66,9 +66,7 @@ const listAirlines = async (req, res) => {
         LIMIT $LIMIT
         OFFSET $OFFSET;
       `
-    options = {
-      parameters: { COUNTRY: country, LIMIT: limit, OFFSET: offset },
-    }
+    options = { parameters: { COUNTRY: country, LIMIT: limit, OFFSET: offset } }
   } else {
     query = `
         SELECT airline.callsign,
@@ -82,9 +80,7 @@ const listAirlines = async (req, res) => {
         OFFSET $OFFSET;
       `
 
-    options = {
-      parameters: { LIMIT: limit, OFFSET: offset },
-    }
+    options = { parameters: { LIMIT: limit, OFFSET: offset } }
   }
   await makeResponse(res, async () => {
     let results = await scope.query(query, options)
