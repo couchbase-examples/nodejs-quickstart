@@ -66,7 +66,10 @@ const listAirlines = async (req, res) => {
         LIMIT $LIMIT
         OFFSET $OFFSET;
       `
-    options = { parameters: { COUNTRY: country, LIMIT: limit, OFFSET: offset } }
+    options = {
+      parameters: { COUNTRY: country, LIMIT: limit, OFFSET: offset },
+      scanConsistency: couchbase.QueryScanConsistency.RequestPlus,
+    }
   } else {
     query = `
         SELECT airline.callsign,
@@ -80,7 +83,10 @@ const listAirlines = async (req, res) => {
         OFFSET $OFFSET;
       `
 
-    options = { parameters: { LIMIT: limit, OFFSET: offset } }
+    options = {
+      parameters: { LIMIT: limit, OFFSET: offset },
+      scanConsistency: couchbase.QueryScanConsistency.RequestPlus,
+    }
   }
   await makeResponse(res, async () => {
     let results = await scope.query(query, options)
