@@ -70,7 +70,6 @@ const listAirport = async (req, res) => {
       `
     options = {
       parameters: { COUNTRY: country, LIMIT: limit, OFFSET: offset },
-      scanConsistency: couchbase.QueryScanConsistency.RequestPlus,
     }
   } else {
     query = `
@@ -89,7 +88,6 @@ const listAirport = async (req, res) => {
 
     options = {
       parameters: { LIMIT: limit, OFFSET: offset },
-      scanConsistency: couchbase.QueryScanConsistency.RequestPlus,
     }
   }
   await makeResponse(res, async () => {
