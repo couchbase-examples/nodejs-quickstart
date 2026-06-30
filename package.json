@@ -25,8 +25,8 @@
   "dependencies": {
     "@babel/runtime": "^7.29.7",
     "cors": "^2.8.6",
-    "couchbase": "4.7.0",
-    "express": "^4.22.1",
+    "couchbase": "^4.7.1",
+    "express": "^4.22.2",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   },
@@ -39,7 +39,7 @@
     "env-cmd": "^11.0.0",
     "jest": "^30.4.2",
     "nodemon": "^3.1.14",
-    "prettier": "^3.8.3",
+    "prettier": "^3.9.4",
     "supertest": "^7.2.2"
   }
 }
