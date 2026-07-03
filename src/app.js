@@ -25,7 +25,7 @@ app.use('/api/v1/airline', airlineRoutes)
 app.use('/api/v1/airport', airportRoutes)
 app.use('/api/v1/route', route)
 
-app.get('*', (req, res) => {
+app.use((req, res) => {
   console.log(`Received request for: ${req.originalUrl}`)
   res.status(404).send('Not Found')
 })
