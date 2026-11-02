@@ -18,7 +18,7 @@ If you are looking for a quickstart using [Ottoman](https://ottomanjs.com/), you
 To run this prebuilt project, you will need:
 
 - [Couchbase Capella](https://www.couchbase.com/products/capella/) cluster with [travel-sample](https://docs.couchbase.com/python-sdk/current/ref/travel-app-data-model.html) bucket loaded.
-  - To run this tutorial using a self managed Couchbase cluster, please refer to the [appendix](#running-self-managed-couchbase-cluster).
+  - To run this tutorial against a local Couchbase Server instead, follow [Running Against a Local Couchbase Server](#running-against-a-local-couchbase-server).
 - [LTS Node.js Version](https://nodejs.org/en/download) installed on local machine (Node.js 24 recommended; the Babel 8 toolchain requires `^22.18.0` or `>=24.11.0`).
 - Basic knowledge of [JavaScript](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics), [Node JS](https://nodejs.org/en/learn/getting-started/introduction-to-nodejs) and [Express](https://expressjs.com/)
 - Loading Travel Sample Bucket
@@ -55,6 +55,7 @@ npm install
 
 ### Setup Database Configuration
 
+> Using a local Couchbase Server instead of Capella? Skip to [Running Against a Local Couchbase Server](#running-against-a-local-couchbase-server).
 
 To know more about connecting to your Capella cluster, please follow the [instructions](https://docs.couchbase.com/cloud/get-started/connect.html).
 
@@ -81,6 +82,88 @@ APP_PORT=3000
 ```
 
 > Note: The connection string expects the `couchbases://` or `couchbase://` part.
+
+| Variable | Required | Description | Local Couchbase Server value |
+| --- | --- | --- | --- |
+| `DB_CONN_STR` | Yes | Couchbase connection string. Use `couchbases://` for Capella (TLS) and `couchbase://` for a local server. | `couchbase://localhost` |
+| `DB_USERNAME` | Yes | Database user with read and write access to the bucket. | `Administrator` |
+| `DB_PASSWORD` | Yes | Password for `DB_USERNAME`. | `password` |
+| `DB_BUCKET_NAME` | Yes | Bucket that holds the sample data. The app expects the `inventory` scope inside it. | `travel-sample` |
+| `APP_PORT` | Yes | Port the Express server listens on. | `3000` |
+
+`npm start` reads `config/dev.env` and `npm test` reads `config/test.env`. If one of the `DB_*` variables is missing, the app fails on startup with `Please define the <NAME> environment variable inside dev.env`.
+
+### Running Against a Local Couchbase Server
+
+These steps run Couchbase Server in Docker on your machine. You can use a Couchbase Server you installed natively instead: start at step 2 and use its host, username, and password.
+
+1. Start Couchbase Server:
+
+   ```sh
+   docker run -d --name couchbase \
+     -p 8091-8097:8091-8097 -p 11210-11211:11210-11211 \
+     couchbase/server:enterprise
+   ```
+
+   Wait until http://localhost:8091 shows the Couchbase Server setup page (this takes about 30 seconds).
+
+2. Initialize the cluster with the Data, Query, and Index services. The app needs all three: Data for key-value operations, and Query plus Index for the SQL++ list endpoints.
+
+   ```sh
+   docker exec couchbase couchbase-cli cluster-init -c localhost \
+     --cluster-username Administrator --cluster-password password \
+     --services data,index,query \
+     --cluster-ramsize 1024 --cluster-index-ramsize 256 \
+     --index-storage-setting default
+   ```
+
+   You can also do this in the web console at http://localhost:8091 by choosing **Setup New Cluster**.
+
+3. Load the `travel-sample` bucket. This also creates the indexes the SQL++ queries use.
+
+   ```sh
+   curl -u Administrator:password -X POST http://localhost:8091/sampleBuckets/install \
+     -d '["travel-sample"]'
+   ```
+
+   In the web console, this is **Settings > Sample Buckets > travel-sample > Load Sample Data**. Loading takes about a minute.
+
+4. Check that the bucket, scope, and collections the app uses exist:
+
+   ```sh
+   curl -s -u Administrator:password \
+     http://localhost:8091/pools/default/buckets/travel-sample/scopes \
+     | grep -o '"name":"inventory"'
+   ```
+
+   This prints `"name":"inventory"` once loading has finished. The app reads and writes these keyspaces:
+
+   | Bucket | Scope | Collections |
+   | --- | --- | --- |
+   | `travel-sample` | `inventory` | `airline`, `airport`, `route` |
+
+5. Create the env files and point them at the local server:
+
+   ```sh
+   cp config/dev.env.example config/dev.env
+   cp config/test.env.example config/test.env
+   ```
+
+   Set the same values in both `config/dev.env` and `config/test.env`:
+
+   ```sh
+   DB_CONN_STR=couchbase://localhost
+   DB_USERNAME=Administrator
+   DB_PASSWORD=password
+   DB_BUCKET_NAME=travel-sample
+   APP_PORT=3000
+   ```
+
+   > Note: Local Couchbase Server uses `couchbase://` (no `s`). `couchbases://` requires TLS and fails against a default local install.
+
+6. Start the app with `npm start`, then [verify it](#verifying-the-application).
+
+These are local development credentials only. Don't reuse them for a shared or production cluster.
 
 ## Running The Application
 
@@ -113,6 +196,8 @@ docker run -it --env-file config/dev.env -p 3000:3000 couchbase-node-express-js-
 
 > Note: The `dev.env` file in the `config` folder has the connection information to connect to your Capella cluster. These will be part of the environment variables in the Docker container.
 
+> Note: Inside the app container, `localhost` refers to the container itself, not your machine. If Couchbase Server runs on your machine, set `DB_CONN_STR=couchbase://host.docker.internal` for the Docker run (on Linux, also add `--add-host=host.docker.internal:host-gateway` to `docker run`).
+
 ### Verifying the Application
 
 Once the application starts, you can see the details of the application on the terminal.
@@ -122,6 +207,33 @@ Once the application starts, you can see the details of the application on the t
 The application will run on port 3000 of your local machine (http://localhost:3000). You will find the interactive Swagger documentation of the API if you go to the URL in your browser. Swagger documentation is used in this demo to showcase the different API end points and how they can be invoked. More details on the Swagger documentation can be found in the [appendix](#swagger-documentation).
 
 ![Swagger Documentation](swagger_documentation.png)
+
+The `API started` log line only means Express is listening. The app connects to Couchbase on the first request, so check that it can read data:
+
+```sh
+curl -i http://localhost:3000/api/v1/airline/airline_10
+```
+
+A working setup returns `HTTP/1.1 200 OK` with this document:
+
+```json
+{"id":10,"type":"airline","name":"40-Mile Air","iata":"Q5","icao":"MLA","callsign":"MILE-AIR","country":"United States"}
+```
+
+To check SQL++ queries too (these need the Query and Index services):
+
+```sh
+curl "http://localhost:3000/api/v1/airport/list?country=United%20Kingdom&limit=2"
+```
+
+This returns a JSON array of two airports.
+
+If the check fails:
+
+- The request hangs or times out: the app can't reach Couchbase. Check `DB_CONN_STR`, and that Couchbase Server is running.
+- `HTTP 500` with `AuthenticationFailureError: authentication failure`: check `DB_USERNAME` and `DB_PASSWORD`.
+- `404` with `document not found`: `travel-sample` isn't loaded, or it is still loading.
+- The list endpoint returns an error but the airline lookup works: the Query or Index service isn't enabled on the cluster, or the travel-sample indexes are still building.
 
 
 ## Running The Tests
@@ -136,7 +248,7 @@ npm test
 ## Appendix
 ### Data Model
 
-For this quickstart, we use three collections, `airport`, `airline` and `routes` that contain sample airports, airlines and airline routes respectively. The routes collection connects the airports and airlines as seen in the figure below. We use these connections in the quickstart to generate airports that are directly connected and airlines connecting to a destination airport. Note that these are just examples to highlight how you can use SQL++ queries to join the collections.
+For this quickstart, we use three collections, `airport`, `airline` and `route` in the `inventory` scope of the `travel-sample` bucket. They contain sample airports, airlines and airline routes respectively. The `route` collection connects the airports and airlines as seen in the figure below. We use these connections in the quickstart to generate airports that are directly connected and airlines connecting to a destination airport. Note that these are just examples to highlight how you can use SQL++ queries to join the collections.
 
 ![travel sample data model](travel_sample_data_model.png)
 
@@ -160,9 +272,7 @@ If you would like to add another entity to the APIs, these are the steps to foll
 Following these steps ensures a systematic and organized approach to expanding the API functionality with a new entity.
 ### Running Self Managed Couchbase Cluster
 
-If you are running this quickstart with a self managed Couchbase cluster, you need to [load](https://docs.couchbase.com/server/current/manage/manage-settings/install-sample-buckets.html) the travel-sample data bucket in your cluster and generate the credentials for the bucket by [creating a user](https://docs.couchbase.com/server/current/manage/manage-security/manage-users-and-roles.html#add-a-user).
-
-You need to update the connection string and the credentials in the `dev.env` file in the `config` folder.
+For step-by-step instructions, see [Running Against a Local Couchbase Server](#running-against-a-local-couchbase-server). For a self-managed cluster on another host, [load](https://docs.couchbase.com/server/current/manage/manage-settings/install-sample-buckets.html) the travel-sample data bucket and [create a user](https://docs.couchbase.com/server/current/manage/manage-security/manage-users-and-roles.html#add-a-user) with read and write access to it. Then set `DB_CONN_STR`, `DB_USERNAME`, and `DB_PASSWORD` in `config/dev.env` to point at that cluster.
 
 > Note: Couchbase Server must be installed and running prior to running this app.
 
