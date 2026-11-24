@@ -1,8 +1,19 @@
-const { CouchbaseError } = require('couchbase')
+import { CouchbaseError } from 'couchbase'
+import { connectToDatabase } from '../../db/connection'
 
+/**
+ * Runs a request handler's database work and writes the JSON response.
+ *
+ * The action receives the database handles (`cluster`, `bucket`, `scope`,
+ * and the inventory collections) from `connectToDatabase()`. Acquiring the
+ * connection here keeps connection failures inside the same JSON error
+ * contract as query/KV failures instead of escaping to Express's default
+ * HTML error handler.
+ */
 async function makeResponse(res, action) {
   try {
-    const result = await action()
+    const db = await connectToDatabase()
+    const result = await action(db)
     res.json(result)
   } catch (e) {
     console.error(e)
@@ -19,6 +30,4 @@ async function makeResponse(res, action) {
   }
 }
 
-module.exports = {
-  makeResponse,
-}
+export { makeResponse }
