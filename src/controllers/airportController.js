@@ -1,5 +1,4 @@
 import { validateRequiredFields } from '../shared/validateRequiredField'
-import { connectToDatabase } from '../../db/connection'
 import { makeResponse } from '../shared/makeResponse'
 import * as couchbase from 'couchbase'
 
@@ -8,8 +7,7 @@ const createAirport = async (req, res) => {
   if (!validateRequiredFields(req, res, requiredFields)) {
     return
   }
-  const { airportCollection } = await connectToDatabase()
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ airportCollection }) => {
     await airportCollection.insert(req.params.id, req.body)
     res.status(201)
     return req.body
@@ -17,8 +15,7 @@ const createAirport = async (req, res) => {
 }
 
 const getAirport = async (req, res) => {
-  const { airportCollection } = await connectToDatabase()
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ airportCollection }) => {
     let getResult = await airportCollection.get(req.params.id)
     return getResult['content']
   })
@@ -29,16 +26,14 @@ const updateAirport = async (req, res) => {
   if (!validateRequiredFields(req, res, requiredFields)) {
     return
   }
-  const { airportCollection } = await connectToDatabase()
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ airportCollection }) => {
     await airportCollection.upsert(req.params.id, req.body)
     return req.body
   })
 }
 
 const deleteAirport = async (req, res) => {
-  const { airportCollection } = await connectToDatabase()
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ airportCollection }) => {
     await airportCollection.remove(req.params.id)
     res.status(204)
     return req.body
@@ -46,7 +41,6 @@ const deleteAirport = async (req, res) => {
 }
 
 const listAirport = async (req, res) => {
-  const { scope } = await connectToDatabase()
   // Fetching parameters
   const country = req.query.country || ''
   const limit = parseInt(req.query.limit, 10) || 10
@@ -92,14 +86,13 @@ const listAirport = async (req, res) => {
       scanConsistency: couchbase.QueryScanConsistency.RequestPlus,
     }
   }
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ scope }) => {
     let results = await scope.query(query, options)
     return results['rows']
   })
 }
 
 const ListDirectConnection = async (req, res) => {
-  const { scope } = await connectToDatabase()
   // Fetching parameters
   const airport = req.query.airport
   const limit = parseInt(req.query.limit, 10) || 10
@@ -116,7 +109,7 @@ const ListDirectConnection = async (req, res) => {
 	OFFSET $OFFSET
       `
   options = { parameters: { AIRPORT: airport, LIMIT: limit, OFFSET: offset } }
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ scope }) => {
     let results = await scope.query(query, options)
     return results['rows']
   })

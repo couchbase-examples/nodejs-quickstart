@@ -1,5 +1,4 @@
 import { validateRequiredFields } from '../shared/validateRequiredField'
-import { connectToDatabase } from '../../db/connection'
 import { makeResponse } from '../shared/makeResponse'
 import * as couchbase from 'couchbase'
 
@@ -8,8 +7,7 @@ const createAirline = async (req, res) => {
   if (!validateRequiredFields(req, res, requiredFields)) {
     return
   }
-  const { airlineCollection } = await connectToDatabase()
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ airlineCollection }) => {
     await airlineCollection.insert(req.params.id, req.body)
     res.status(201)
     return req.body
@@ -17,8 +15,7 @@ const createAirline = async (req, res) => {
 }
 
 const getAirline = async (req, res) => {
-  const { airlineCollection } = await connectToDatabase()
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ airlineCollection }) => {
     let getResult = await airlineCollection.get(req.params.id)
     return getResult['content']
   })
@@ -29,16 +26,14 @@ const updateAirline = async (req, res) => {
   if (!validateRequiredFields(req, res, requiredFields)) {
     return
   }
-  const { airlineCollection } = await connectToDatabase()
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ airlineCollection }) => {
     await airlineCollection.upsert(req.params.id, req.body)
     return req.body
   })
 }
 
 const deleteAirline = async (req, res) => {
-  const { airlineCollection } = await connectToDatabase()
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ airlineCollection }) => {
     await airlineCollection.remove(req.params.id)
     res.status(204)
     return
@@ -46,7 +41,6 @@ const deleteAirline = async (req, res) => {
 }
 
 const listAirlines = async (req, res) => {
-  const { scope } = await connectToDatabase()
   // Fetching parameters
   const country = req.query.country || ''
   const limit = parseInt(req.query.limit, 10) || 10
@@ -88,14 +82,13 @@ const listAirlines = async (req, res) => {
       scanConsistency: couchbase.QueryScanConsistency.RequestPlus,
     }
   }
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ scope }) => {
     let results = await scope.query(query, options)
     return results['rows']
   })
 }
 
 const listAirlinesToAirport = async (req, res) => {
-  const { scope } = await connectToDatabase()
   // Fetching parameters
   const airport = req.query.airport
   const limit = parseInt(req.query.limit, 10) || 10
@@ -123,7 +116,7 @@ const listAirlinesToAirport = async (req, res) => {
     parameters: { AIRPORT: airport, LIMIT: limit, OFFSET: offset },
     scanConsistency: couchbase.QueryScanConsistency.RequestPlus,
   }
-  await makeResponse(res, async () => {
+  await makeResponse(res, async ({ scope }) => {
     let results = await scope.query(query, options)
     return results['rows']
   })
